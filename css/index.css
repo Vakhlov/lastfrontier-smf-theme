@@ -12,11 +12,17 @@ html {
 	--font: 78%/130% "Verdana", "Arial", "Helvetica", sans-serif;
 	
 	/* внешняя рамка всего содержимого */
-	--outerFrameBorderColor: #21241b;
-	--outerFrameBorderRadius: 8px;
-	--outerFrameBorderWidth: 1px;
+	--frameBorderColor: #21241b;
+	--frameBorderRadius: 8px;
+	--frameBorderWidth: 1px;
 
-	/* внутренняя рамка заголовка */
+	/* заголовок */
+	--headerBackgroundColor: #33362d;
+	--headerBackgroundImage: linear-gradient(#262920, var(--headerBackgroundColor));
+	--headerBackgroundHeight: 74px;
+	--headerDecoBorderRadius: 6px;
+	--headerDecoHSpace: 5px;
+	--headerDecoVSpace: 44px;
 }
 
 /* Set a fontsize that will look the same in all browsers. */
@@ -31,52 +37,51 @@ body
 	padding: var(--bodyVerticalPaddings) 0;
 }
 
+.lff-container {
+	margin: 0 auto;
+	min-width: 764px;
+	max-width: 2300px;
+}
 
 /* Стили для верхней части страницы (заголовка).
 ------------------------------------------------------- */
 .lff-header {
-	background-color: #33362d;
-	border: var(--outerFrameBorderWidth) solid var(--outerFrameBorderColor);
+	background: var(--headerBackgroundColor) var(--headerBackgroundImage) repeat-x;
+	background-size: 1px var(--headerBackgroundHeight);
+	border: var(--frameBorderWidth) solid var(--frameBorderColor);
 	border-bottom-width: 0;
-	border-radius: var(--outerFrameBorderRadius) var(--outerFrameBorderRadius) 0 0;
-}
-
-.lff-header-inner-frame {
-	background-image: linear-gradient(#262920, #33362d);
-	background-repeat: repeat-x;
-	background-size: 1px 74px;
-	background-clip: padding-box;
-	border: 1px solid transparent;
-	border-radius: 8px 8px 0 0;
+	border-radius: var(--frameBorderRadius) var(--frameBorderRadius) 0 0;
 	position: relative;
 }
 
-.lff-header-inner-frame::before {
-	background: linear-gradient(#33362d, #33362d);
-	border-radius: inherit;
+/* Внутренняя рамка заголовка */
+.lff-header::before {
+	border: 1px solid var(--headerBackgroundColor);
+	border-bottom-width: 0;
+	border-radius: var(--frameBorderRadius) var(--frameBorderRadius) 0 0;
 	content: '';
 	display: block;
 	height: 61px;
 	left: 0;
-	margin: -1px;
 	position: absolute;
 	right: 0;
 	top: 0;
-	z-index: -1;
+	z-index: 0;
 }
 
-.lff-header-inner-frame::after {
+/* Декорация заголовка */
+.lff-header::after {
 	background-image: url(../images/theme/header-deco.png);
 	background-position: center top;
 	background-repeat: no-repeat;
-	border-radius: 6px;
+	border-radius: var(--headerDecoBorderRadius);
 	content: '';
 	display: block;
-	height: 136px;
-	left: 4px;
+	height: 111px;
+	left: var(--headerDecoHSpace);
 	position: absolute;
-	right: 4px;
-	top: 43px;
+	right: var(--headerDecoHSpace);
+	top: var(--headerDecoVSpace);
 	z-index: 0;
 }
 
@@ -126,9 +131,11 @@ body, td, th, tr
 /* This division wraps the entire forum when a forum width is set. */
 div#wrapper
 {
+	/*
 	margin: 0 auto;
 	min-width: 764px;
 	max-width: 2300px;
+	*/
 }
 
 /* lets give all forms zero padding/margins */

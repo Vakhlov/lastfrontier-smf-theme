@@ -495,7 +495,7 @@ function renderToggleJs () {
  * Выводи шапку форума: логотип, пользовательский блок, ссылку на магазин, меню.
  */
 function renderHeader () {
-	echo '<div id="header" class="lff-header"><div class="lff-header-inner-frame">';
+	echo '<div id="header" class="lff-header">';
 
 	renderTopSection();	
 	renderUpperSection();
@@ -508,13 +508,14 @@ function renderHeader () {
 
 	renderBrSeparator();
 
-	echo '</div></div>';
+	echo '</div>';
 }
 
 function template_body_above() {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
-	echo !empty($settings['forum_width']) ? '<div id="wrapper" style="width: ' . $settings['forum_width'] . '">' : '';
+	$style = empty($settings['forum_width']) ? '' : ' style="width: ' . $settings['forum_width'] . ';"';
+	echo '<div id="wrapper" class="lff-container"' . $style . '>';
 	
 	renderHeader();
 
@@ -553,8 +554,7 @@ function template_body_below()
 		<p>', $txt['page_created'], $context['load_time'], $txt['seconds_with'], $context['load_queries'], $txt['queries'], '</p>';
 
 	echo '
-	</div></div>', !empty($settings['forum_width']) ? '
-</div>' : '';
+	</div></div>', '</div>';
 }
 
 function template_html_below()
