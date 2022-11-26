@@ -647,7 +647,9 @@ $txt['movetopic_auto_board'] = '[РАЗДЕЛ ФОРУМА]';
 $txt['movetopic_auto_topic'] = '[ССЫЛКА НА ТЕМУ]';
 $txt['movetopic_default'] = 'Тема перенесена в ' . $txt['movetopic_auto_board'] . ".\n\n" . $txt['movetopic_auto_topic'];
 
+$txt['upshrink_collapse'] = 'Свернуть';
 $txt['upshrink_description'] = 'Свернуть/Развернуть';
+$txt['upshrink_expand'] = 'Развернуть';
 
 $txt['mark_unread'] = 'Отметить непрочитанной';
 

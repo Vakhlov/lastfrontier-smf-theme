@@ -104,6 +104,7 @@ function template_html_above()
 	<script type="text/javascript" src="', $settings['theme_url'], '/scripts/jquery-1.9.1.min.js"></script>
 	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/script.js?fin20"></script>
 	<script type="text/javascript" src="', $settings['theme_url'], '/scripts/theme.js?fin20"></script>
+	<script type="text/javascript" src="', $settings['theme_url'], '/scripts/themetwo.js?fin20"></script>
 	<script type="text/javascript"><!-- // --><![CDATA[
 		var smf_theme_url = "', $settings['theme_url'], '";
 		var smf_default_theme_url = "', $settings['default_theme_url'], '";
@@ -165,6 +166,17 @@ function template_html_above()
 	echo '
 </head>
 <body>';
+	renderSvgSprite();
+}
+
+/**
+ *
+ */
+function renderSvgSprite () {
+	echo '
+		<svg fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none;">
+			<g id="shevron" fill="currentColor"><rect width="10" height="6" transform="matrix(0.707 -0.707 0 1 2.929 10.07)"/><rect width="10" height="6" transform="matrix(0.707 0.707 0 1 10 3)"/></g>
+		</svg>';
 }
 
 /**
@@ -182,18 +194,19 @@ function renderTitle () {
 		$linkContent = '<img src="' . $headerLogoUrl . '" alt="' . $forumName . '" />';
 	}
 
-	echo '<h1 class="forumtitle"><a href="http://lastfrontier.ru/">', $linkContent, '</a></h1>';
+	echo '<h1><a href="http://lastfrontier.ru/">', $linkContent, '</a></h1>';
 }
 
 /**
  * Выводит кнопку сворачивания верхнего раздела, где выводится форма авторизации или информация о пользователе.
  */
 function renderCollapseUpperSectionButton () {
-	global $settings, $txt;
+	global $txt;
 
-	$url = $settings['images_url'] . '/upshrink.png';
-
-	echo '<img id="upshrink" src="', $url , '" alt="*" title="', $txt['upshrink_description'], '" style="display: none;" />';
+	// идентификатор кнопки, для которой создается JS-представоление;
+	// должен совпадать с тем, что используется в функции renderToggleJs
+	$id = 'upperSectionToggle';
+	echo '<button class="lff-toggle-section" id="', $id, '" title="', $txt['upshrink_description'],'"><svg width="20" height="20"><use href="#shevron"/></svg></button>';
 }
 
 /**
@@ -203,20 +216,32 @@ function renderForumSlogan () {
 	global $settings;
 
 	$slogan = $settings['site_slogan'];
+	$classNames = ['lff-slogan'];
 
 	if (empty($slogan)) {
 		$url = $settings['images_url'] . '/smflogo.png';
-		echo '<img id="smflogo" src="' . $url . '" alt="Simple Machines Forum" title="Simple Machines Forum" />';
+		$slogan = '<img src="' . $url . '" alt="Simple Machines Forum" title="Simple Machines Forum" />';
+		$classNames[] = 'lff-slogan_default';
 	}
 
-	echo '<div id="siteslogan" class="floatright">', $slogan, '</div>';
+	echo '<div class="', implode(' ', $classNames), '">', $slogan, '</div>';
 }
 
 /**
  * Выводит самый верхний раздел (логотип, слоган, кнопка сворачивания верхнего раздела).
  */
 function renderTopSection () {
-	echo '<div id="top_section">';
+	global $context;
+
+	$classNames = ['lff-top-section'];
+	$headerLogoUrl = $context['header_logo_url_html_safe'];
+
+	if (empty($headerLogoUrl)) {
+		// если нет логотипа, будет выводиться текст, для которого нужны другие отступы
+		$classNames[] = 'lff-top-section_default';
+	}
+
+	echo '<div class="', implode(' ', $classNames), '">';
 
 	renderTitle();
 	renderCollapseUpperSectionButton();
@@ -427,12 +452,14 @@ function renderSearchAndNews () {
 }
 
 /**
- * Выводит верхний раздлел: форма авторизации, информация об авторизованном пользователе, форма поиска и блок случайной новости.
+ * Выводит верхний раздел: форма авторизации, информация об авторизованном пользователе, форма поиска и блок случайной новости.
  */
 function renderUpperSection () {
 	global $options;
 
-	echo '<div id="upper_section" class="middletext"', empty($options['collapse_header']) ? '' : ' style="display: none;"', '>';
+	// для авторизованных пользователей можем сразу скрыть сворачиваемый блок;
+	// для неавторизованных используем JavaScript-компонент для этих целей
+	echo '<div id="upper_section" class="middletext"', empty($options['collapseHeader']) ? '' : ' style="display: none;"', '>';
 
 	renderUserBlock();
 	renderSearchAndNews();
@@ -458,37 +485,53 @@ function renderBrSeparator () {
  * Выводит код JavaScript для обеспечения сворачивания верхнего блока.
  */
 function renderToggleJs () {
-	global $context, $txt;
+	global $context, $options, $txt;
 
+	// идентификатор кнопки, для которой создается JS-представоление;
+	// должен совпадать с тем, что используется в функции renderCollapseUpperSectionButton
+	$id = 'upperSectionToggle';
+
+	// идентификатор сворачиваемого контейнера;
+	// должен совпадать с тем, что используется в функции renderUpperSection
+	$container = 'upper_section';
+
+	// название настройки, которая будет использоваться для сохранения состояния сворачиваемого блока в БД;
+	// должно совпадать с тем, что используется в функции renderUpperSection
+	$optionName = 'collapseHeader';
+
+	// получение состояния блока из БД, если оно там есть
+	$collapsed = empty($options[$optionName]) ? 'false' : 'true';
+	// указание на то, что надо использовать Cookie вместо БД для получения состояния сворачиваемого блока;
+	// для неавторизованных пользователей состояние получается из Cookie
+	$useCookie = $context['user']['is_guest'] ? 'true' : 'false';
+	// указание на то, что надо использовать БД вместо Cookie для получения состояния сворачиваемого блока;
+	// для авторизованных пользователей состояние получается из БД
+	$themeOptionsEnabled = $context['user']['is_guest'] ? 'false' : 'true';
+
+	// вывод JavaScript-кода, который создает JS-представление кнопки сворачивания-разворачивания верхнего блока
 	echo '
-		<script type="text/javascript"><!-- // --><![CDATA[
-			var oMainHeaderToggle = new smc_Toggle({
-				bToggleEnabled: true,
-				bCurrentlyCollapsed: ', empty($options['collapse_header']) ? 'false' : 'true', ',
-				aSwappableContainers: [
-					\'upper_section\'
-				],
-				aSwapImages: [
-					{
-						sId: \'upshrink\',
-						srcExpanded: smf_images_url + \'/upshrink.png\',
-						altExpanded: ', JavaScriptEscape($txt['upshrink_description']), ',
-						srcCollapsed: smf_images_url + \'/upshrink2.png\',
-						altCollapsed: ', JavaScriptEscape($txt['upshrink_description']), '
-					}
-				],
-				oThemeOptions: {
-					bUseThemeSettings: ', $context['user']['is_guest'] ? 'false' : 'true', ',
-					sOptionName: \'collapse_header\',
-					sSessionVar: ', JavaScriptEscape($context['session_var']), ',
-					sSessionId: ', JavaScriptEscape($context['session_id']), '
+		<script>
+			new SectionToggle({
+				button: {
+					id: \'', $id, '\',
+					titleCollapsed: ', JavaScriptEscape($txt['upshrink_expand']), ',
+					titleExpanded: ', JavaScriptEscape($txt['upshrink_collapse']), '
 				},
-				oCookieOptions: {
-					bUseCookie: ', $context['user']['is_guest'] ? 'true' : 'false', ',
-					sCookieName: \'upshrink\'
+				collapsed: ', $collapsed, ',
+				collapsedClassName: \'lff-toggle-section_collapsed\',
+				container: \'', $container, '\',
+				cookie: {
+					enabled: ', $useCookie, ',
+					name: \'sectionToggle\'
+				},
+				themeOptions: {
+					enabled: \'', $themeOptionsEnabled, '\',
+					optionName: \'', $optionName, '\',
+					sessionId: ', JavaScriptEscape($context['session_id']), ',
+					sessionVar: ', JavaScriptEscape($context['session_var']), ',
 				}
 			});
-		// ]]></script>';
+		</script>';
 }
 
 /**
@@ -512,7 +555,7 @@ function renderHeader () {
 }
 
 function template_body_above() {
-	global $context, $settings, $options, $scripturl, $txt, $modSettings;
+	global $settings;
 
 	$style = empty($settings['forum_width']) ? '' : ' style="width: ' . $settings['forum_width'] . ';"';
 	echo '<div id="wrapper" class="lff-container"' . $style . '>';

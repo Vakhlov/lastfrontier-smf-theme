@@ -12,17 +12,18 @@ html {
 	--font: 78%/130% "Verdana", "Arial", "Helvetica", sans-serif;
 	
 	/* внешняя рамка всего содержимого */
-	--frameBorderColor: #21241b;
+	--frameBorderColor: #21241B;
 	--frameBorderRadius: 8px;
 	--frameBorderWidth: 1px;
 
 	/* заголовок */
-	--headerBackgroundColor: #33362d;
+	--headerBackgroundColor: #33362D;
 	--headerBackgroundImage: linear-gradient(#262920, var(--headerBackgroundColor));
 	--headerBackgroundHeight: 74px;
 	--headerDecoBorderRadius: 6px;
 	--headerDecoHSpace: 5px;
 	--headerDecoVSpace: 44px;
+	--toggleSectionButtonColor: #FFF;
 }
 
 /* Set a fontsize that will look the same in all browsers. */
@@ -83,6 +84,70 @@ body
 	right: var(--headerDecoHSpace);
 	top: var(--headerDecoVSpace);
 	z-index: 0;
+}
+
+/* Самый верхний блок: логотип, слоган, кнопка сворачивания */
+.lff-top-section {
+	min-height: 121px;
+	position: relative;
+    z-index: 1;
+}
+
+.lff-top-section::after {
+	display: block;
+    clear: both;
+	content: '';
+}
+
+.lff-top-section h1 {
+	float: left;
+	margin-top: 3px;
+    margin-left: 10px;
+}
+
+.lff-top-section h1 img {
+	width: 224px
+}
+
+.lff-top-section_default h1 {
+	line-height: 20px;
+	margin-top: 10px;
+	padding-top: 2px;
+}
+
+/* Кнопка сворачивания-разворачивания верхнего блока (блока пользователя) */
+.lff-toggle-section {
+	background: transparent;
+	border-width: 0;
+	color: var(--toggleSectionButtonColor);
+	display: none;
+	float: right;
+	margin: 10px;
+}
+
+.lff-toggle-section:hover,
+.lff-toggle-section:focus {
+	border-width: 0;
+}
+
+.lff-toggle-section use {
+	transform-origin: center;
+	transition: all .3s ease-in-out;
+}
+
+.lff-toggle-section_collapsed use {
+	transform: rotate(180deg);
+}
+
+.lff-slogan {
+	float: right;
+	line-height: 20px;
+	margin: 10px 0 0 10px;
+	padding-top: 2px;
+}
+
+.lff-slogan_default {
+	margin-top: 2px;
 }
 
 /* Normal, standard links. */
@@ -1537,6 +1602,7 @@ div#upper_section div.news form
 	min-height: 65px;
 	overflow: hidden;
 	margin-bottom: 3px;
+	position: relative;
 }
 #upper_section
 {
