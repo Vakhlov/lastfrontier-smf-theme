@@ -361,7 +361,7 @@ function renderUserData () {
 /**
  * Выводит форму авторизации и ссылку на страницу регистрации.
  */
-function renderLoginRegisterForm () {
+function renderLoginForm () {
 	global $context, $scripturl, $settings, $txt;
 
 	if (!$context['user']['is_logged'] && !empty($context['show_login_bar'])) {
@@ -370,10 +370,10 @@ function renderLoginRegisterForm () {
 		$action = $scripturl . '?action=login2';
 		$onSubmit = empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\');"' : '';
 
-		echo '<form id="guest_form" action="', $action, '" method="post" accept-charset="', $context['character_set'], '" ', $onSubmit, '>';
-		echo '<div class="info">', sprintf($txt['welcome_guest'], $txt['guest_title']), '</div>';
-		echo '<input type="text" name="user" size="10" class="input_text" />';
-		echo '<input type="password" name="passwrd" size="10" class="input_password" />';
+		echo '<form class="lff-form" action="', $action, '" method="post" accept-charset="', $context['character_set'], '" ', $onSubmit, '>';
+		echo '<div class="lff-form-text">', sprintf($txt['welcome_guest'], $txt['guest_title']), '</div>';
+		echo '<input type="text" name="user" size="10" />';
+		echo '<input type="password" name="passwrd" size="10" />';
 		echo '<select name="cookielength">
 				<option value="60">', $txt['one_hour'], '</option>
 				<option value="1440">', $txt['one_day'], '</option>
@@ -381,14 +381,18 @@ function renderLoginRegisterForm () {
 				<option value="43200">', $txt['one_month'], '</option>
 				<option value="-1" selected="selected">', $txt['forever'], '</option>
 			  </select>';
-		echo '<input type="submit" value="', $txt['login'], '" class="button_submit" /><br />';
-		echo '<div class="info">', $txt['quick_login_dec'], '</div>';
+		echo '<input type="submit" value="', $txt['login'], '" />';
+		// константа намеренно сделана пустой в локализации
+		// echo '<div class="lff-form-text">', $txt['quick_login_dec'], '</div>';
 
 		if (!empty($modSettings['enableOpenID'])) {
-			echo '<br /><input type="text" name="openid_identifier" id="openid_url" size="25" class="input_text openid_login" />';
+			echo '<br /><input type="text" name="openid_identifier" id="openid_url" size="25" class="lff-form-openid-login" />';
 		}
 
-		echo '<input type="hidden" name="hash_passwrd" value="" /><input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />';
+		if (empty($context['disable_login_hashing'])) {
+			echo '<input type="hidden" name="hash_passwrd" value="" />';
+			echo '<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />';
+		}
 
 		echo '</form>';
 	}
@@ -398,12 +402,8 @@ function renderLoginRegisterForm () {
  * Выводит пользовательский блок: информацию для авторизованного пользователя, форму авторизации - для не авторизованного.
  */
 function renderUserBlock () {
-	echo '<div class="user">';
-	
 	renderUserData();
-	renderLoginRegisterForm();
-
-	echo '</div>';
+	renderLoginForm();
 }
 
 /**
@@ -411,9 +411,12 @@ function renderUserBlock () {
  */
 function renderSearch () {
 	global $context, $scripturl, $txt;
-	echo '<form id="search_form" action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '">';
-	echo '<input type="text" name="search" value="" class="input_text" />';
-	echo '<input type="submit" name="submit" value="', $txt['search'], '" class="button_submit" />';
+
+	$action = $scripturl . '?action=search2';
+
+	echo '<form action="', $action, '" method="post" accept-charset="', $context['character_set'], '">';
+	echo '<input type="text" name="search" value="" />';
+	echo '<input type="submit" name="submit" value="', $txt['search'], '" />';
 	echo '<input type="hidden" name="advanced" value="0" />';
 
 	if (!empty($context['current_topic'])) {
@@ -430,12 +433,14 @@ function renderSearch () {
 /**
  * Выводит блок новостей.
  */
-function renderNews () {
+function renderRandomNews () {
 	global $context, $settings, $txt;
 	
 	if (!empty($settings['enable_news'])) {
+		echo '<div class="lff-random-news">';
 		echo '<h2>', $txt['news'], ':</h2>';
 		echo '<p>', $context['random_news_line'], '</p>';
+		echo '</div>';
 	}
 }
 
@@ -443,10 +448,10 @@ function renderNews () {
  * Выводит блок с поиском и новостями.
  */
 function renderSearchAndNews () {
-	echo '<div class="news normaltext">';
+	echo '<div class="lff-search-and-news">';
 
 	renderSearch();
-	renderNews();
+	renderRandomNews();
 
 	echo '</div>';
 }
@@ -459,7 +464,7 @@ function renderUpperSection () {
 
 	// для авторизованных пользователей можем сразу скрыть сворачиваемый блок;
 	// для неавторизованных используем JavaScript-компонент для этих целей
-	echo '<div id="upper_section" class="middletext"', empty($options['collapseHeader']) ? '' : ' style="display: none;"', '>';
+	echo '<div class="lff-upper-section" id="upper_section"', empty($options['collapseHeader']) ? '' : ' style="display: none;"', '>';
 
 	renderUserBlock();
 	renderSearchAndNews();

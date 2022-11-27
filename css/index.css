@@ -9,8 +9,10 @@ html {
 	--bodyBackgroundRepeat: repeat-x;
 	--bodyBackgroundSize: 100% 178px;
 	--bodyVerticalPaddings: 15px;
-	--font: 78%/130% "Verdana", "Arial", "Helvetica", sans-serif;
-	
+	--fontFamily: Verdana, Arial, Helvetica, sans-serif;
+	--fontSize: 78%;
+	--lineHeight: 130%;
+
 	/* внешняя рамка всего содержимого */
 	--frameBorderColor: #21241B;
 	--frameBorderRadius: 8px;
@@ -24,16 +26,28 @@ html {
 	--headerDecoHSpace: 5px;
 	--headerDecoVSpace: 44px;
 	--toggleSectionButtonColor: #FFF;
+
+	/* формы в целом */
+	--inputBackground: #D5C975;
+	--inputBorderColor: #FFE900;
+	--inputHoverBorderColor: #E16E0E;
+	--inputFocusBorderColor: #E16E0E;
+	--inputColor: #780808;
+	--inputFontSize: 95%;
+	--inputHeight: 20px;
+	--submitBackground: #FBB006;
+	--submitBorderColor: #E16E0E;
 }
 
-/* Set a fontsize that will look the same in all browsers. */
-body
-{
+/* Общие стили */
+body {
 	background-color: var(--bodyBackgroundColor);
 	background-image: var(--bodyBackgroundImage);
 	background-repeat: var(--bodyBackgroundRepeat);
 	background-size: var(--bodyBackgroundSize);
-	font: var(--font);
+	font-family: var(--fontFamily);
+	font-size: var(--fontSize);
+	line-height: var(--lineHeight);
 	margin: 0 auto;
 	padding: var(--bodyVerticalPaddings) 0;
 }
@@ -42,6 +56,59 @@ body
 	margin: 0 auto;
 	min-width: 764px;
 	max-width: 2300px;
+}
+
+/* Стили форм и их элементов управления */
+form {
+	margin: 0;
+	padding: 0;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="submit"],
+select {
+	background-color: var(--inputBackground);
+	border: 1px solid var(--inputBorderColor);
+	box-sizing: border-box;
+	color: var(--inputColor);
+	font-family: var(--fontFamily);
+	font-size: var(--inputFontSize);
+	line-height: var(--inputHeight);
+	height: var(--inputHeight);
+	margin-right: 3px;
+	margin-bottom: 3px;
+	padding: 0 2px;
+}
+
+input[type="text"]:hover,
+input[type="password"]:hover,
+select:hover {
+	border-color: var(--inputHoverBorderColor);
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+select:focus {
+	border-color: var(--inputFocusBorderColor);
+}
+
+select {
+	padding: 0 0 1px 0;
+	vertical-align: bottom;
+}
+
+input[type="submit"] {
+	background-color: var(--submitBackground);
+	border: 1px solid var(--submitBorderColor);
+	cursor: pointer;
+	line-height: calc(var(--inputHeight) - 2px);
+	vertical-align: bottom;
+}
+
+input[type="submit"]:hover,
+input[type="submit"]:focus {
+	border-color: var(--submitBorderColor);
 }
 
 /* Стили для верхней части страницы (заголовка).
@@ -139,6 +206,7 @@ body
 	transform: rotate(180deg);
 }
 
+/* Слоган */
 .lff-slogan {
 	float: right;
 	line-height: 20px;
@@ -150,6 +218,52 @@ body
 	margin-top: 2px;
 }
 
+/* Пользовательский блок, поиск, новости */
+.lff-upper-section {
+	display: flex;
+	font-size: .9em;
+	justify-content: space-between;
+	line-height: 1em;
+	padding: 0 20px;
+	position: relative;
+	z-index: 1;
+}
+
+/* Форма авторизации */
+.lff-form-text {
+	line-height: 1.3em;
+	padding: 4px 0;
+}
+
+.lff-form-openid-login {
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xml:space='preserve' style='enable-background:new 0 0 25.573 25.573' viewBox='0 0 25.6 25.6'%3E%3Cpath d='M12 24.6V3.3L15.4 1v21.7zM11.1 8v2.8s-6.6.5-7 5.6c0 0-1 4.4 7 5.8v2.4S0 23.4 0 16.3c0 0-.1-7.3 11.1-8.4zM16.2 8v2.6s2.1 0 4 1.5l-2 .8 7.4 1.9V9L23 10.4S21 8.1 16.2 7.9z' style='fill:%23030104'/%3E%3C/svg%3E");
+	background-position: 2px 1px;
+	background-repeat: no-repeat;
+	background-size: 16px;
+	padding-left: 20px;
+}
+
+/* Поиск и новости */
+.lff-search-and-news {
+	padding-top: 1px;
+}
+
+.lff-search-and-news input[type="submit"] {
+	margin-right: 0;
+}
+
+.lff-random-news {
+	line-height: 1.2em;
+	padding-top: 2px;
+	text-align: right;
+}
+
+.lff-random-news p {
+	margin: 0;
+}
+
+
+/* -------------------------------- */
 /* Normal, standard links. */
 a:link, a:visited
 {
@@ -203,13 +317,6 @@ div#wrapper
 	*/
 }
 
-/* lets give all forms zero padding/margins */
-form
-{
-	padding: 0;
-	margin: 0;
-}
-
 /* We can style the different types of input buttons to be uniform throughout different browsers and their color themes.
 	.button_submit - covers input[type=submit], input[type=button], button[type=submit] and button[type=button] in all browsers
 	.button_reset  - covers input[type=reset] and button[type=reset] throughout all browsers
@@ -219,7 +326,7 @@ form
 	.input_file    - covers input[type=file] throughout all browsers
 */
 
-input, button, select, textarea
+input, button, /*select, */textarea
 {
 	font: 95%/115% verdana, Helvetica, sans-serif;
 	background: #d5c975;
@@ -231,7 +338,7 @@ input, button, select, textarea
 /* Select elements look horrible with the extra padding, so leave them unpadded. */
 select
 {
-	padding: 0;
+	/*padding: 0;*/
 }
 
 /* Add some padding to the options instead. */
@@ -256,7 +363,7 @@ textarea
 	cursor: pointer;
 	font-weight: normal;
 }
-input:hover, textarea:hover, button:hover, select:hover
+input:hover, textarea:hover, button:hover/*, select:hover*/
 {
 	border: 1px solid #454545;
 }
@@ -265,7 +372,7 @@ input:hover, textarea:hover, button:hover, select:hover
 	/* border: 1px solid #aaa; */
 	/* background: url(../images/theme/submit_bg.png) no-repeat 0 -140px #cde7ff; */
 }
-input:focus, textarea:focus, button:focus, select:focus
+input:focus, textarea:focus, button:focus/*, select:focus*/
 {
 	border: 1px solid #454545;
 }
@@ -326,7 +433,7 @@ a img
 /* Define strong as bold, and em as italics */
 strong
 {
-	font-weight: bold;
+	/* font-weight: bold; */
 }
 
 em
@@ -766,11 +873,6 @@ a.moderation_link, a.moderation_link:visited
 	font-weight: bold;
 }
 
-.openid_login
-{
-	background: white url(../images/openid.gif) no-repeat;
-	padding-left: 18px;
-}
 
 /* a descriptive style */
 .description, .description_board, .plainbox
@@ -1543,8 +1645,8 @@ img#smflogo
 /* the upper_section, float the two each way */
 #upper_section
 {
-	padding: 5px;
-	margin-bottom: 1.5em;
+	/*padding: 5px;
+	margin-bottom: 1.5em;*/
 }
 #upper_section ul li.greeting
 {
