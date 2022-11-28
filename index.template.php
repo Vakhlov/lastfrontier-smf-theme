@@ -257,7 +257,7 @@ function renderAvatar () {
 	global $context;
 
 	if (!empty($context['user']['avatar'])) {
-		echo '<p class="avatar">', $context['user']['avatar']['image'], '</p>';
+		echo '<p class="avatar"><img src="', $context['user']['avatar']['href'], '" alt="" width="65" /></p>';
 	}
 }
 
@@ -266,7 +266,7 @@ function renderAvatar () {
  */
 function renderGreeting () {
 	global $context, $txt;
-	echo '<li class="greeting">', $txt['hello_member_ndt'], ' <span>', $context['user']['name'], '</span></li>';
+	echo '<p class="lff-user-data-greeting">', $txt['hello_member_ndt'], ' <span>', $context['user']['name'], '</span></p>';
 }
 
 /**
@@ -342,19 +342,28 @@ function renderUserData () {
 	global $context;
 
 	if ($context['user']['is_logged']) {
+		echo '<div class="lff-user-data">';
+
 		renderAvatar();
-	
-		echo '<ul class="reset">';
+
+		echo '<div>';
 
 		renderGreeting();
+
+		echo '<ul class="lff-user-data-links">';
+
 		renderUnread();
 		renderUnreadReplies();
 		renderMaintenanceNotice();
 		renderUnapprovedMembersNotice();
 		renderOpenModerationReportsNotice();
 		renderCurrentTime();
-		
+
 		echo '</ul>';
+
+		echo '</div>';
+
+		echo '</div>';
 	}
 }
 
@@ -476,7 +485,7 @@ function renderUpperSection () {
  * Выводит ссылку на магазин поддержки.
  */
 function renderShopLink () {
-	echo '<div class="shop-link" style="padding: 5px;"><a href="https://shop.lastfrontier.ru/" target="_blank">Магазин поддержки</a></div>';
+	echo '<div class="lff-shop-link"><a href="https://shop.lastfrontier.ru/" target="_blank">Магазин поддержки</a></div>';
 }
 
 /**

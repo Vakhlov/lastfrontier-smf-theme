@@ -243,6 +243,26 @@ input[type="submit"]:focus {
 	padding-left: 20px;
 }
 
+/* Пользовательский блок: изображение, приветствие, ссылки, время */
+.lff-user-data {
+	display: flex;
+}
+
+.lff-user-data-greeting {
+	font-size: 1.3em;
+	font-weight: bold;
+	line-height: 1.5em;
+	margin: 8px 0 0 0;
+	padding-left: 15px;
+}
+
+.lff-user-data-links {
+	line-height: 1.3em;
+	list-style: none;
+	margin-top: 0;
+	padding-left: 15px;
+}
+
 /* Поиск и новости */
 .lff-search-and-news {
 	padding-top: 1px;
@@ -260,6 +280,18 @@ input[type="submit"]:focus {
 
 .lff-random-news p {
 	margin: 0;
+}
+
+/* Ссылка на магазин поддержки */
+.lff-shop-link {
+	padding: 0 20px;
+}
+
+.lff-shop-link a {
+	border: 1px solid var(--submitBorderColor);
+	display: inline-block;
+	font-size: .9em;
+	padding: 7px 9px;
 }
 
 
@@ -3880,15 +3912,4 @@ span.hidelink
 
 .thanks span {
 	font-weight:bold;
-}
-
-.shop-link {
-	padding: 5px;
-}
-
-.shop-link a {
-	font-size: .9em;
-	outline: 1px solid #ffa500;
-	padding: 7px;
-	text-decoration: none;
 }
