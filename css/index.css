@@ -19,8 +19,9 @@ html {
 	--frameBorderWidth: 1px;
 
 	/* заголовок */
-	--headerBackgroundColor: #33362D;
-	--headerBackgroundImage: linear-gradient(#262920, var(--headerBackgroundColor));
+	--headerBackgroundColorStart: #262920;
+	--headerBackgroundColorStop: #33362D;
+	--headerBackgroundImage: linear-gradient(var(--headerBackgroundColorStart), var(--headerBackgroundColorStop));
 	--headerBackgroundHeight: 74px;
 	--headerDecoBorderRadius: 6px;
 	--headerDecoHSpace: 5px;
@@ -37,6 +38,10 @@ html {
 	--inputHeight: 20px;
 	--submitBackground: #FBB006;
 	--submitBorderColor: #E16E0E;
+
+	/* меню */
+	--menuItemColor: #FFF;
+	--menuItemHoverBackground: #616455;
 }
 
 /* Общие стили */
@@ -114,7 +119,7 @@ input[type="submit"]:focus {
 /* Стили для верхней части страницы (заголовка).
 ------------------------------------------------------- */
 .lff-header {
-	background: var(--headerBackgroundColor) var(--headerBackgroundImage) repeat-x;
+	background: var(--headerBackgroundColorStop) var(--headerBackgroundImage) repeat-x;
 	background-size: 1px var(--headerBackgroundHeight);
 	border: var(--frameBorderWidth) solid var(--frameBorderColor);
 	border-bottom-width: 0;
@@ -124,7 +129,7 @@ input[type="submit"]:focus {
 
 /* Внутренняя рамка заголовка */
 .lff-header::before {
-	border: 1px solid var(--headerBackgroundColor);
+	border: 1px solid var(--headerBackgroundColorStop);
 	border-bottom-width: 0;
 	border-radius: var(--frameBorderRadius) var(--frameBorderRadius) 0 0;
 	content: '';
@@ -294,6 +299,228 @@ input[type="submit"]:focus {
 	padding: 7px 9px;
 }
 
+/* Главное меню
+------------------------------------------------------- */
+.lff-menu {
+	margin: 0 20px;
+}
+
+.lff-menu,
+.lff-menu ul {
+	list-style: none;
+	padding: 0;
+}
+
+.lff-menu ul {
+	margin: 0;
+}
+
+.lff-menu li {
+	display: inline-block;
+	font-size: 0.9em;
+	line-height: 22px;
+	margin: 0 8px 0 0;
+	padding: 0;
+	position: relative;
+}
+
+.lff-menu a {
+	display: block;
+	padding: 0 5px;
+}
+
+.lff-menu a:link,
+.lff-menu a:visited {
+	color: var(--menuItemColor);
+	text-decoration: none;
+}
+
+.lff-menu-item_active {
+	font-weight: bold;
+}
+
+.lff-menu ul {
+	background: var(--headerBackgroundColorStop) var(--headerBackgroundImage) repeat-x;
+	background-size: 1px var(--headerBackgroundHeight);
+	border: 1px solid var(--headerBackgroundColorStart);
+	border-top-width: 0;
+	display: none;
+	left: 5px;
+	line-height: 1em;
+	margin-top: 7px;
+	padding: 0;
+	position: absolute;
+	top: 100%;
+	width: 19em;
+	z-index: 1;
+}
+
+.lff-menu li:hover > ul {
+	display: block;
+}
+
+.lff-menu ul::before {
+	content: '';
+	display: block;
+	height: 7px;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: -7px;
+}
+
+.lff-menu ul::after {
+	border: 7px solid transparent;
+	border-bottom-color: var(--headerBackgroundColorStart);
+	border-top-width: 0;
+	content: '';
+    display: block;
+	height: 0;
+	left: 12px;
+	position: absolute;
+	top: -7px;
+    width: 0;
+}
+
+.lff-menu ul li {
+	display: list-item;
+	font-size: 1em;
+	margin: 0;
+}
+
+.lff-menu ul a {
+	padding: 8px;
+}
+
+.lff-menu li li:hover > a {
+	background: var(--menuItemHoverBackground);
+}
+
+.lff-menu li li:hover ul {
+	display: block;
+	left: 15em;
+	margin-top: -18px;
+}
+
+
+/*.dropmenu, .dropmenu ul
+{
+	line-height: 1em;
+}
+.dropmenu
+{
+	padding: 0 0.5em;
+}*/
+/*.dropmenu a
+{
+	display: block;
+	color: #FFF;
+	text-decoration: none;
+}
+.dropmenu a span
+{
+	display: block;
+	padding: 0 0 0 5px;
+	font-size: 0.9em;
+}*/
+/* the background's first level only */
+/*.dropmenu li a.firstlevel
+{
+	margin-right: 8px;
+}*/
+/*.dropmenu li a.firstlevel span.firstlevel
+{
+	display: block;
+	position: relative;
+	left: -5px;
+	padding-left: 5px;
+	height: 22px;
+	line-height: 19px;
+	white-space: pre;
+}*/
+/*.dropmenu li
+{
+	float: left;
+	display: inline;
+	padding: 0;
+	margin: 0;
+	position: relative;
+}*/
+.dropmenu li ul
+{
+	z-index: 90;
+	display: none;/**/
+	position: absolute;/**/
+	width: 19.2em;
+	font-weight: normal;
+	border-bottom: 1px solid #999;
+	background: url(../images/theme/menu_gfx.png) 0 -130px no-repeat;
+	padding: 7px 0 0 0;
+	left:0;
+}
+.dropmenu li li
+{
+	width: 19em;
+	margin: 0;
+	border-left: 1px solid #999;
+	border-right: 1px solid #999;
+}
+.dropmenu li li a span
+{
+	display: block;
+	padding: 8px;
+}
+.dropmenu li ul ul
+{
+	margin: -1.8em 0 0 13em;
+}
+
+/* the active button */
+.dropmenu li a.active
+{
+	/* background: url(../images/theme/menu_gfx.png) no-repeat 100% 0;*/
+	color: #fff;
+	font-weight: bold;
+}
+.dropmenu li a.active span.firstlevel
+{
+	/*background: url(../images/theme/menu_gfx.png) no-repeat 0 0;*/
+}
+/* the hover effects */
+.dropmenu li a.firstlevel:hover, .dropmenu li:hover a.firstlevel
+{
+	/*background: url(../images/theme/menu_gfx.png) no-repeat 100% -30px;*/
+	color: #fff;
+	cursor: pointer;
+	text-decoration: none;
+}
+.dropmenu li a.firstlevel:hover span.firstlevel, .dropmenu li:hover a.firstlevel span.firstlevel
+{
+	/*background: url(../images/theme/menu_gfx.png) no-repeat 0 -30px;*/
+}
+/* the hover effects on level2 and 3 */
+.dropmenu li li a:hover, .dropmenu li li:hover>a
+{
+	background: #d4dbe4;
+	color: #000;
+	text-decoration: none;
+}
+.dropmenu li:hover ul ul, .dropmenu li:hover ul ul ul
+{
+	top: -999em;
+}
+.dropmenu li li:hover ul
+{
+	top: auto;
+}
+.dropmenu li:hover ul
+{
+	display: block;
+}
+.dropmenu li li.additional_items
+{
+	background-color: #fff;
+}
 
 /* -------------------------------- */
 /* Normal, standard links. */
@@ -1384,136 +1611,6 @@ span.lowerframe span
 	background-color: #888;
 	cursor: pointer;
 	color: #eee;
-}
-
-/* Styles for the standard dropdown menus.
-------------------------------------------------------- */
-#main_menu
-{
-	padding: 0 0.5em;
-	float: left;
-	margin: 0;
-	width: 98%;
-}
-
-.dropmenu, .dropmenu ul
-{
-	list-style: none;
-	line-height: 1em;
-	padding: 0;
-	margin: 0;
-}
-.dropmenu
-{
-	padding: 0 0.5em;
-}
-.dropmenu a
-{
-	display: block;
-	color: #FFF;
-	text-decoration: none;
-}
-.dropmenu a span
-{
-	display: block;
-	padding: 0 0 0 5px;
-	font-size: 0.9em;
-}
-/* the background's first level only */
-.dropmenu li a.firstlevel
-{
-	margin-right: 8px;
-}
-.dropmenu li a.firstlevel span.firstlevel
-{
-	display: block;
-	position: relative;
-	left: -5px;
-	padding-left: 5px;
-	height: 22px;
-	line-height: 19px;
-	white-space: pre;
-}
-.dropmenu li
-{
-	float: left;
-	padding: 0;
-	margin: 0;
-	position: relative;
-}
-.dropmenu li ul
-{
-	z-index: 90;
-	display: none;
-	position: absolute;
-	width: 19.2em;
-	font-weight: normal;
-	border-bottom: 1px solid #999;
-	background: url(../images/theme/menu_gfx.png) 0 -130px no-repeat;
-	padding: 7px 0 0 0;
-}
-.dropmenu li li
-{
-	width: 19em;
-	margin: 0;
-	border-left: 1px solid #999;
-	border-right: 1px solid #999;
-}
-.dropmenu li li a span
-{
-	display: block;
-	padding: 8px;
-}
-.dropmenu li ul ul
-{
-	margin: -1.8em 0 0 13em;
-}
-
-/* the active button */
-.dropmenu li a.active
-{
-	/* background: url(../images/theme/menu_gfx.png) no-repeat 100% 0;*/
-	color: #fff;
-	font-weight: bold;
-}
-.dropmenu li a.active span.firstlevel
-{
-	/*background: url(../images/theme/menu_gfx.png) no-repeat 0 0;*/
-}
-/* the hover effects */
-.dropmenu li a.firstlevel:hover, .dropmenu li:hover a.firstlevel
-{
-	/*background: url(../images/theme/menu_gfx.png) no-repeat 100% -30px;*/
-	color: #fff;
-	cursor: pointer;
-	text-decoration: none;
-}
-.dropmenu li a.firstlevel:hover span.firstlevel, .dropmenu li:hover a.firstlevel span.firstlevel
-{
-	/*background: url(../images/theme/menu_gfx.png) no-repeat 0 -30px;*/
-}
-/* the hover effects on level2 and 3 */
-.dropmenu li li a:hover, .dropmenu li li:hover>a
-{
-	background: #d4dbe4;
-	color: #000;
-	text-decoration: none;
-}
-.dropmenu li:hover ul ul, .dropmenu li:hover ul ul ul
-{
-	top: -999em;
-}
-.dropmenu li li:hover ul
-{
-	top: auto;
-}
-.dropmenu li:hover ul
-{
-	display: block;
-}
-.dropmenu li li.additional_items
-{
-	background-color: #fff;
 }
 
 /* The dropdown menu toggle image */

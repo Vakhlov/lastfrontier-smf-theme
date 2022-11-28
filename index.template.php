@@ -623,8 +623,7 @@ function template_html_below()
 }
 
 // Show a linktree. This is that thing that shows "My Community | General Category | General Discussion"..
-function theme_linktree($force_show = false)
-{
+function theme_linktree($force_show = false) {
 	global $context, $settings, $options, $shown_linktree;
 
 	// If linktree is empty, just return - also allow an override.
@@ -667,65 +666,63 @@ function theme_linktree($force_show = false)
 	$shown_linktree = true;
 }
 
-// Show the menu up top. Something like [home] [help] [profile] [logout]...
-function template_menu()
-{
+
+/**
+ *
+ */
+function renderMenuItemLink ($button, $addEllipsis = false) {
+	$target = isset($button['target']) ? ' target="' . $button['target'] . '"' : '';
+	$className = $button['active_button'] ? 'lff-menu-item_active' : '';
+	$content = '<span>' . $button['title'] . ($addEllipsis && !empty($button['sub_buttons']) ? '...' : '') . '</span>';
+
+	echo '<a href="', $button['href'], '"', $target, ' class="', $className ,'">', $content, '</a>';
+}
+
+/**
+ *
+ */
+function renderSubmenu ($button) {
+	if (!empty($button['sub_buttons'])) {
+		echo '<ul>';
+
+		 foreach ($button['sub_buttons'] as $childbutton) {
+			echo '<li>';
+
+			renderMenuItemLink($childbutton, true);
+			renderSubmenu($childbutton);
+
+			echo '</li>';
+		}
+
+		echo '</ul>';
+	}
+}
+
+/**
+ * Выводит меню: Начало, Поиск, Помощь, Профиль и пр.
+ */
+function template_menu () {
 	global $context, $settings, $options, $scripturl, $txt;
 
-	echo '
-		<div id="main_menu">
-			<ul class="dropmenu" id="menu_nav">';
+	echo '<ul class="lff-menu">';
 
-	foreach ($context['menu_buttons'] as $act => $button)
-	{
-		echo '
-				<li id="button_', $act, '">
-					<a class="', $button['active_button'] ? 'active ' : '', 'firstlevel" href="', $button['href'], '"', isset($button['target']) ? ' target="' . $button['target'] . '"' : '', '>
-						<span class="', isset($button['is_last']) ? 'last ' : '', 'firstlevel">', $button['title'], '</span>
-					</a>';
-		if (!empty($button['sub_buttons']))
-		{
-			echo '
-					<ul>';
+	// $context['menu_buttons']['admin']['sub_buttons']['featuresettings']['sub_buttons'] = array('btn'=> array('title' => 'Свойства и параметры', 'href' => 'https://google.com/', 'show' => 1));
 
-			foreach ($button['sub_buttons'] as $childbutton)
-			{
-				echo '
-						<li>
-							<a href="', $childbutton['href'], '"', isset($childbutton['target']) ? ' target="' . $childbutton['target'] . '"' : '', '>
-								<span', isset($childbutton['is_last']) ? ' class="last"' : '', '>', $childbutton['title'], !empty($childbutton['sub_buttons']) ? '...' : '', '</span>
-							</a>';
-				// 3rd level menus :)
-				if (!empty($childbutton['sub_buttons']))
-				{
-					echo '
-							<ul>';
+	// echo '<!--';
+	// print_r($context['menu_buttons']);
+	// echo '-->';
 
-					foreach ($childbutton['sub_buttons'] as $grandchildbutton)
-						echo '
-								<li>
-									<a href="', $grandchildbutton['href'], '"', isset($grandchildbutton['target']) ? ' target="' . $grandchildbutton['target'] . '"' : '', '>
-										<span', isset($grandchildbutton['is_last']) ? ' class="last"' : '', '>', $grandchildbutton['title'], '</span>
-									</a>
-								</li>';
+	foreach ($context['menu_buttons'] as $act => $button) {
+		//echo '<li id="button_', $act, '">';
+		echo '<li>';
 
-					echo '
-							</ul>';
-				}
+		renderMenuItemLink($button);
+		renderSubmenu($button);
 
-				echo '
-						</li>';
-			}
-				echo '
-					</ul>';
-		}
-		echo '
-				</li>';
+		echo '</li>';
 	}
 
-	echo '
-			</ul>
-		</div>';
+	echo '</ul>';
 }
 
 // Generate a strip of buttons.
