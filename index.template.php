@@ -170,7 +170,7 @@ function template_html_above()
 }
 
 /**
- *
+ * Выводит svg-спрайт, из которого потом берутся отдельные изображения.
  */
 function renderSvgSprite () {
 	echo '
@@ -566,7 +566,10 @@ function renderHeader () {
 	echo '</div>';
 }
 
-function template_body_above() {
+/**
+ * Выводит общую верхнюю часть страницы, до основного содержимого.
+ */
+function template_body_above () {
 	global $settings;
 
 	$style = empty($settings['forum_width']) ? '' : ' style="width: ' . $settings['forum_width'] . ';"';
@@ -574,21 +577,19 @@ function template_body_above() {
 	
 	renderHeader();
 
-	// The main content should go here.
-	echo '
-	<div id="content_section"><div class="frame">
-		<div id="main_content_section">';
+	// основное содержимое страницы
+	echo '<div class="lff-content">';
 
-	// Custom banners and shoutboxes should be placed here, before the linktree.
+	// частные баннеры и другое содержимое стоит вставлять в это место
 
-	// Show the navigation tree.
+	// хлебные крошки
 	theme_linktree();
 }
 
 /**
  * Выводит разную информацию ссылки в подвал: copyright, rss, мобильная версия и пр.
  */
-function renderFooterData() {
+function renderFooterData () {
 	global $context, $scripturl, $txt, $modSettings;
 
 	$validatorLink = '<a href="http://validator.w3.org/check?uri=referer" target="_blank" title="' . $txt['valid_xhtml'] . '">' . $txt['xhtml'] . '</a>';
@@ -629,64 +630,68 @@ function renderFooter () {
 }
 
 /**
- * Выводит подвал и закрывающие теги для тех, что использованы в template_body_above.
+ * Выводит общую нижнюю часть страницы, после основного содержимого.
  */
 function template_body_below () {
-	echo '
-		</div>
-	</div></div>'; // закрытие content_section, frame и main_content_section, открытых в template_body_above
+	// закрытие lff-content открытого в template_body_above
+	echo '</div>';
 
 	renderFooter();
 
 	echo '</div>'; // закрытие lff-container, открытого в template_body_above
 }
 
+/**
+ *
+ */
 function template_html_below () {
 	echo '</body></html>';
 }
 
-// Show a linktree. This is that thing that shows "My Community | General Category | General Discussion"..
-function theme_linktree($force_show = false) {
+/**
+ * Выводит хлебные крошки.
+ */
+function theme_linktree ($force_show = false) {
 	global $context, $settings, $options, $shown_linktree;
 
-	// If linktree is empty, just return - also allow an override.
-	if (empty($context['linktree']) || (!empty($context['dont_default_linktree']) && !$force_show))
-		return;
+	// есть, что выводить и либо не запрещено настройками, либо вывод намеренный
+	if (!empty($context['linktree']) && (empty($context['dont_default_linktree']) || $force_show)) {
+		echo '<div class="lff-navigation">';
+		echo '<ul>';
 
-	echo '
-	<div class="navigate_section">
-		<ul>';
+		foreach ($context['linktree'] as $link_num => $tree) {
+			echo '<li>';
 
-	// Each tree item has a URL and name. Some may have extra_before and extra_after.
-	foreach ($context['linktree'] as $link_num => $tree)
-	{
-		echo '
-			<li', ($link_num == count($context['linktree']) - 1) ? ' class="last"' : '', '>';
+			// содержимое перед ссылкой
+			if (isset($tree['extra_before'])) {
+				echo $tree['extra_before'];
+			}
 
-		// Show something before the link?
-		if (isset($tree['extra_before']))
-			echo $tree['extra_before'];
+			// ссылка
+			if ($settings['linktree_link'] && isset($tree['url'])) {
+				echo '<a href="', $tree['url'], '">', $tree['name'], '</a>';
+			} else {
+				echo $tree['name'];
+			}
 
-		// Show the link, including a URL if it should have one.
-		echo $settings['linktree_link'] && isset($tree['url']) ? '
-				<a href="' . $tree['url'] . '"><span>' . $tree['name'] . '</span></a>' : '<span>' . $tree['name'] . '</span>';
+			// содержимое после ссылки
+			if (isset($tree['extra_after'])) {
+				echo $tree['extra_after'];
+			}
 
-		// Show something after the link...?
-		if (isset($tree['extra_after']))
-			echo $tree['extra_after'];
+			// разделитель крошек
+			if ($link_num != count($context['linktree']) - 1) {
+				echo ' &#187;';
+			}
 
-		// Don't show a separator for the last one.
-		if ($link_num != count($context['linktree']) - 1)
-			echo ' &#187;';
+			echo '</li>';
+		}
 
-		echo '
-			</li>';
+		echo '</ul>';
+		echo '</div>';
+
+		$shown_linktree = true;
 	}
-	echo '
-		</ul>
-	</div>';
-
-	$shown_linktree = true;
 }
 
 

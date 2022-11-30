@@ -47,6 +47,9 @@ html {
 	--footerBackgroundColorStart: #2E3128;
 	--footerBakcgroundImage: linear-gradient(to top, var(--footerBackgroundColorStart), var(--contentBackgroundColor));
 	--footerBackgroundHeight: 16px;
+
+	/* основное содержимое */
+	--contentNavigationBorderColor: #CCC;
 }
 
 /* Общие стили */
@@ -446,6 +449,32 @@ input[type="submit"]:focus {
 
 .lff-footer p {
 	margin: 0;
+}
+
+/* Основное содержимое.
+------------------------------------------------------- */
+/* Хлебные крошки */
+.lff-content {
+	background: var(--contentBackgroundColor);
+	border-right: 1px solid var(--frameBorderColor);
+	border-left: 1px solid var(--frameBorderColor);
+	padding: 0 20px;
+}
+
+.lff-navigation {
+	padding: .5em 0;
+}
+.lff-navigation ul {
+	border-top: 1px solid var(--contentNavigationBorderColor);
+	font-size: .9em;
+	list-style: none;
+	margin: 0;
+	padding: 1em 0 .5em 0;
+}
+
+.lff-navigation li {
+	display: inline-block;
+	padding-right: .5em;
 }
 
 /*.dropmenu, .dropmenu ul
