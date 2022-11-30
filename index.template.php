@@ -549,7 +549,7 @@ function renderToggleJs () {
 }
 
 /**
- * Выводи шапку форума: логотип, пользовательский блок, ссылку на магазин, меню.
+ * Выводит шапку форума: логотип, пользовательский блок, ссылку на магазин, меню.
  */
 function renderHeader () {
 	echo '<div id="header" class="lff-header">';
@@ -562,8 +562,6 @@ function renderHeader () {
 
 	// вывод меню (Show the menu here, according to the menu sub template.)
 	template_menu();
-
-	renderBrSeparator();
 
 	echo '</div>';
 }
@@ -587,39 +585,64 @@ function template_body_above() {
 	theme_linktree();
 }
 
-function template_body_below()
-{
-	global $context, $settings, $options, $scripturl, $txt, $modSettings;
+/**
+ * Выводит разную информацию ссылки в подвал: copyright, rss, мобильная версия и пр.
+ */
+function renderFooterData() {
+	global $context, $scripturl, $txt, $modSettings;
 
-	echo '
-		</div>
-	</div></div>';
+	$validatorLink = '<a href="http://validator.w3.org/check?uri=referer" target="_blank" title="' . $txt['valid_xhtml'] . '">' . $txt['xhtml'] . '</a>';
+	$rssLink = '<a href="' . $scripturl . '?action=.xml;type=rss">' . $txt['rss'] . '</a>';
+	$mobileVersionLink = '<a href="' . $scripturl . '?wap2">' . $txt['wap2'] . '</a>';
 
-	// Show the "Powered by" and "Valid" logos, as well as the copyright. Remember, the copyright must be somewhere!
-	echo '
-	<div id="footer_section"><div class="frame">
-		<ul class="reset">
-			<li class="copyright">', theme_copyright(), '</li>
-			<li><a id="button_xhtml" href="http://validator.w3.org/check?uri=referer" target="_blank" class="new_win" title="', $txt['valid_xhtml'], '"><span>', $txt['xhtml'], '</span></a></li>
-			', !empty($modSettings['xmlnews_enable']) && (!empty($modSettings['allow_guestAccess']) || $context['user']['is_logged']) ? '<li><a id="button_rss" href="' . $scripturl . '?action=.xml;type=rss" class="new_win"><span>' . $txt['rss'] . '</span></a></li>' : '', '
-			<li class="last"><a id="button_wap2" href="', $scripturl , '?wap2" class="new_win"><span>', $txt['wap2'], '</span></a></li>
-		</ul>';
+	$showRssLink = !empty($modSettings['xmlnews_enable']) && (!empty($modSettings['allow_guestAccess']) || $context['user']['is_logged']);
 
-	// Show the load time?
-	if ($context['show_load_time'])
-		echo '
-		<p>', $txt['page_created'], $context['load_time'], $txt['seconds_with'], $context['load_queries'], $txt['queries'], '</p>';
-
-	echo '
-	</div></div>', '</div>';
+	echo '<ul>';
+	echo '<li class="copyright">', theme_copyright(), '</li>';
+	echo '<li>', $validatorLink, '</li>';
+	echo $showRssLink ? '<li>' . $rssLink . '</li>' : '';
+	echo '<li>', $mobileVersionLink, '</li>';
+	echo '</ul>';
 }
 
-function template_html_below()
-{
-	global $context, $settings, $options, $scripturl, $txt, $modSettings;
+/**
+ * Выводит время загрузки страницы и количество запросов.
+ */
+function renderStats () {
+	global $context, $txt;
 
+	if ($context['show_load_time']) {
+		echo '<p>', $txt['page_created'], $context['load_time'], $txt['seconds_with'], $context['load_queries'], $txt['queries'], '</p>';
+	}
+}
+
+/**
+ * Выводит подвал.
+ */
+function renderFooter () {
+	echo '<div class="lff-footer">';
+
+	renderFooterData();
+	renderStats();
+
+	echo '</div>';
+}
+
+/**
+ * Выводит подвал и закрывающие теги для тех, что использованы в template_body_above.
+ */
+function template_body_below () {
 	echo '
-</body></html>';
+		</div>
+	</div></div>'; // закрытие content_section, frame и main_content_section, открытых в template_body_above
+
+	renderFooter();
+
+	echo '</div>'; // закрытие lff-container, открытого в template_body_above
+}
+
+function template_html_below () {
+	echo '</body></html>';
 }
 
 // Show a linktree. This is that thing that shows "My Community | General Category | General Discussion"..
@@ -668,7 +691,7 @@ function theme_linktree($force_show = false) {
 
 
 /**
- *
+ * Выводит отдельный пункт меню.
  */
 function renderMenuItemLink ($button, $addEllipsis = false) {
 	$target = isset($button['target']) ? ' target="' . $button['target'] . '"' : '';
@@ -679,7 +702,7 @@ function renderMenuItemLink ($button, $addEllipsis = false) {
 }
 
 /**
- *
+ * Выводит вложенное меню (2 и 3 уровня).
  */
 function renderSubmenu ($button) {
 	if (!empty($button['sub_buttons'])) {
@@ -706,13 +729,16 @@ function template_menu () {
 
 	echo '<ul class="lff-menu">';
 
+	// TODO: remove next line
 	// $context['menu_buttons']['admin']['sub_buttons']['featuresettings']['sub_buttons'] = array('btn'=> array('title' => 'Свойства и параметры', 'href' => 'https://google.com/', 'show' => 1));
 
+	// TODO: remove next 3 lines
 	// echo '<!--';
 	// print_r($context['menu_buttons']);
 	// echo '-->';
 
 	foreach ($context['menu_buttons'] as $act => $button) {
+		// TODO: remove next line
 		//echo '<li id="button_', $act, '">';
 		echo '<li>';
 

@@ -9,6 +9,7 @@ html {
 	--bodyBackgroundRepeat: repeat-x;
 	--bodyBackgroundSize: 100% 178px;
 	--bodyVerticalPaddings: 15px;
+	--contentBackgroundColor: #33362D;
 	--fontFamily: Verdana, Arial, Helvetica, sans-serif;
 	--fontSize: 78%;
 	--lineHeight: 130%;
@@ -20,8 +21,7 @@ html {
 
 	/* заголовок */
 	--headerBackgroundColorStart: #262920;
-	--headerBackgroundColorStop: #33362D;
-	--headerBackgroundImage: linear-gradient(var(--headerBackgroundColorStart), var(--headerBackgroundColorStop));
+	--headerBackgroundImage: linear-gradient(var(--headerBackgroundColorStart), var(--contentBackgroundColor));
 	--headerBackgroundHeight: 74px;
 	--headerDecoBorderRadius: 6px;
 	--headerDecoHSpace: 5px;
@@ -42,6 +42,11 @@ html {
 	/* меню */
 	--menuItemColor: #FFF;
 	--menuItemHoverBackground: #616455;
+
+	/* подвал */
+	--footerBackgroundColorStart: #2E3128;
+	--footerBakcgroundImage: linear-gradient(to top, var(--footerBackgroundColorStart), var(--contentBackgroundColor));
+	--footerBackgroundHeight: 16px;
 }
 
 /* Общие стили */
@@ -119,7 +124,7 @@ input[type="submit"]:focus {
 /* Стили для верхней части страницы (заголовка).
 ------------------------------------------------------- */
 .lff-header {
-	background: var(--headerBackgroundColorStop) var(--headerBackgroundImage) repeat-x;
+	background: var(--contentBackgroundColor) var(--headerBackgroundImage) repeat-x;
 	background-size: 1px var(--headerBackgroundHeight);
 	border: var(--frameBorderWidth) solid var(--frameBorderColor);
 	border-bottom-width: 0;
@@ -129,7 +134,7 @@ input[type="submit"]:focus {
 
 /* Внутренняя рамка заголовка */
 .lff-header::before {
-	border: 1px solid var(--headerBackgroundColorStop);
+	border: 1px solid var(--contentBackgroundColor);
 	border-bottom-width: 0;
 	border-radius: var(--frameBorderRadius) var(--frameBorderRadius) 0 0;
 	content: '';
@@ -340,7 +345,7 @@ input[type="submit"]:focus {
 }
 
 .lff-menu ul {
-	background: var(--headerBackgroundColorStop) var(--headerBackgroundImage) repeat-x;
+	background: var(--contentBackgroundColor) var(--headerBackgroundImage) repeat-x;
 	background-size: 1px var(--headerBackgroundHeight);
 	border: 1px solid var(--headerBackgroundColorStart);
 	border-top-width: 0;
@@ -402,6 +407,46 @@ input[type="submit"]:focus {
 	margin-top: -18px;
 }
 
+/* Подвал
+------------------------------------------------------- */
+.lff-footer {
+	font-size: .8em;
+	text-align: center;
+}
+
+.lff-footer::before {
+	background: var(--contentBackgroundColor) var(--footerBakcgroundImage) left bottom repeat-x;
+	background-size: 1px var(--footerBackgroundHeight);
+	border: var(--frameBorderWidth) solid var(--frameBorderColor);
+	border-radius: 0 0 var(--frameBorderRadius) var(--frameBorderRadius);
+	border-top-width: 0;
+	content: '';
+	display: block;
+	height: 44px;
+}
+
+.lff-footer ul {
+	list-style: none;
+	margin: 15px 0 0 0;
+	padding: 0;
+}
+
+.lff-footer li {
+	display: inline;
+	padding: 0 5px;
+}
+
+.lff-footer .copyright {
+	display: list-item;
+}
+
+.lff-footer .smalltext {
+	font-size: 100%;
+}
+
+.lff-footer p {
+	margin: 0;
+}
 
 /*.dropmenu, .dropmenu ul
 {
@@ -1870,7 +1915,7 @@ div#upper_section div.news form
 }
 
 /* The footer wih copyright links etc. */
-#footer_section
+/*#footer_section
 {
 	text-align: center;
 	background: url(../images/theme/main_block.png) no-repeat 0 -820px;
@@ -1898,7 +1943,7 @@ div#upper_section div.news form
 #footer_section ul li.copyright
 {
 	display: block;
-}
+}*/
 select.qaction, input.qaction
 {
 	font-size: 0.85em;
