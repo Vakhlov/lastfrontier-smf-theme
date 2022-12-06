@@ -10,6 +10,294 @@
  * @version 2.0
  */
 
+/**
+ * Выводит название категории. Если категория сворачиваемая, название выводится как ссылка.
+ */
+function renderCategoryName ($category) {
+	echo '<h3>';
+
+	if ($category['can_collapse']) {
+		echo '<a href="', $category['collapse_href'], '" id="c', $category['id'], '">', $category['name'], '</a>';
+	} else {
+		echo $category['name'];
+	}
+
+	echo '</h3>';
+}
+
+/**
+ * Для авторизовавшихся пользователей при определенной настройке выводится ссылка "Непрочитанные сообщения".
+ */
+function renderUnreadLink ($category) {
+	global $context, $scripturl, $txt;
+
+	if (!$context['user']['is_guest'] && !empty($category['show_unread'])) {
+		$href = $scripturl . '?action=unread;c=' . $category['id'];
+		echo '<a href="', $href, '" class="lff-category-unreadlink">', $txt['view_unread_category'], '</a>';
+	}
+}
+
+/**
+ * Кнопка сворачивания категории.
+ */
+function renderCollapseCategoryLink ($category) {
+	// если категорию можно свернуть, выводится кнопка для этого
+	if ($category['can_collapse']) {
+		echo '<a href="', $category['collapse_href'], '" class="lff-category-collapse">', $category['collapse_image'], '</a>';
+	}
+}
+
+/**
+ * Выводит заголовок категории.
+ */
+function renderCategoryHeader ($category) {
+	echo '<tbody class="lff-category-header" id="category_', $category['id'], '">';
+	echo '<tr>';
+	echo '<td colspan="4">';
+	echo '<div class="lff-category-header-content">';
+
+	renderCategoryName($category);
+	renderUnreadLink($category);
+	renderCollapseCategoryLink($category);
+
+	echo '</div>';
+	echo '</td>';
+	echo '</tr>';
+	echo '</tbody>';
+}
+
+/**
+ * Выводит ссылку на доску и иконку-индикатор новых сообщений или перенаправления.
+ */
+function renderBoardIconAndLink ($board) {
+	global $context, $settings, $txt, $scripturl;
+
+	echo '<td class="lff-board-icon"', !empty($board['children']) ? ' rowspan="2"' : '', '>';
+
+	// если доска - перенаправление или если пользователь не авторизован - используется ссылка на доску
+	// в остальных случаях - ссылка на непрочитанные
+	$href = $board['is_redirect'] || $context['user']['is_guest'] ? $board['href'] : $scripturl . '?action=unread;board=' . $board['id'] . '.0;children';
+	echo '<a href="', $href, '">';
+
+	$src = $settings['images_url'] . '/' . $context['theme_variant_url'];
+	$alt = '*';
+	$title = '*';
+	$width = 38;
+
+	if ($board['new'] || $board['children_new']) {
+		// если доска новая или есть дочерние доски новые, выводится индикатор "новые сообщения"
+		$src .= 'on' . ($board['new'] ? '' : '2') . '.png';
+		$alt = $txt['new_posts'];
+		$title = $txt['new_posts'];
+		$height = $board['new'] ? 41 : 42;
+	} elseif ($board['is_redirect']) {
+		// если доска - перенаправление, выводится соответствующий индикатор
+		$src .= 'redirect.png';
+		$height = 42;
+	} else {
+		// если новых сообщений нет, выводится индикатор "нет новых сообщений"
+		$src .= 'off.png';
+		$alt = $txt['old_posts'];
+		$title = $txt['old_posts'];
+		$height = 41;
+	}
+
+	echo '<img src="', $src, '" alt="', $alt, '" title="', $title, '" width="', $width, '" height="', $height, '" />';
+
+	echo '</a>';
+	echo '</td>';
+}
+
+/**
+ * Выводит название и описание доски, ссылку на сообщения к модерации, перечень модераторов.
+ */
+function renderBoardInfo ($board) {
+	global $context, $txt, $scripturl;
+
+	echo '<td class="lff-board-info">';
+	// ссылка на доску
+	echo '<a class="lff-board-info-subject" href="', $board['href'], '" name="b', $board['id'], '">', $board['name'], '</a>';
+
+	// ссылка на сообщения, ожидающие модерации
+	if ($board['can_approve_posts'] && ($board['unapproved_posts'] || $board['unapproved_topics'])) {
+		$params = [
+			'action=moderate',
+			'area=postmod',
+			'sa=' . ($board['unapproved_topics'] > 0 ? 'topics' : 'posts'),
+			'brd=' . $board['id'],
+			$context['session_var'] . '=' . $context['session_id']
+		];
+		$href = $scripturl . '?' . implode(';', $params);
+		$title = sprintf($txt['unapproved_posts'], $board['unapproved_topics'], $board['unapproved_posts']);
+		echo '<a href="', $href, '" title="', $title, '" class="lff-board-info-moderation-link">(!)</a>';
+	}
+
+	// описание доски
+	echo '<p class="lff-board-info-description">', $board['description'] , '</p>';
+
+	// список модераторов; у каждого есть свойства `name`, `href` и `id`, но для скорости используется `link_moderators`
+	if (!empty($board['moderators'])) {
+		echo '<p class="lff-board-info-moderators">', count($board['moderators']) == 1 ? $txt['moderator'] : $txt['moderators'], ': ', implode(', ', $board['link_moderators']), '</p>';
+	}
+
+	echo '</td>';
+}
+
+/**
+ * Выводит статистику доски: число сообщений или перенаправлений, число тем.
+ */
+function renderBoardStats ($board) {
+	global $txt;
+
+	$posts = comma_format($board['posts']) . ' ' . ($board['is_redirect'] ? $txt['redirects'] : $txt['posts']);
+	$topics = $board['is_redirect'] ? '' : (comma_format($board['topics']) . ' ' . $txt['board_topics']);
+
+	echo '<td class="lff-board-stats">';
+	echo '<p>', $posts, ' <br />', $topics, '</p>';
+	echo '</td>';
+}
+
+/**
+ * Выводит информацию о последнем сообщении доски.
+ */
+function renderBoardLastPostInfo ($board) {
+	global $txt;
+
+	echo '<td class="lff-lastboard-lastpost">';
+
+	/* The board's and children's 'last_post's have:
+	time, timestamp (a number that represents the time.), id (of the post), topic (topic id.),
+	link, href, subject, start (where they should go for the first unread post.),
+	and member. (which has id, name, link, href, username in it.) */
+	if (!empty($board['last_post']['id'])) {
+		echo '
+			<p><strong>', $txt['last_post'], '</strong>  ', $txt['by'], ' ', $board['last_post']['member']['link'] , '<br />
+			', $txt['in'], ' ', $board['last_post']['link'], '<br />
+			', $txt['on'], ' ', $board['last_post']['time'],'
+			</p>';
+	}
+
+	echo '</td>';
+}
+
+function renderChildBoardsInfo ($board) {
+	global $context, $scripturl, $settings, $txt;
+	// Show the "Child Boards: ". (there's a link_children but we're going to bold the new ones...)
+	if (!empty($board['children']))
+	{
+		// Sort the links into an array with new boards bold so it can be imploded.
+		$children = array();
+		/* Each child in each board's children has:
+				id, name, description, new (is it new?), topics (#), posts (#), href, link, and last_post. */
+		foreach ($board['children'] as $child)
+		{
+			if (!$child['is_redirect']) {
+				$className = $child['new'] ? 'class="new_posts" ' : '';
+				$title = ($child['new'] ? $txt['new_posts'] : $txt['old_posts']) . ' (' . $txt['board_topics'] . ': ' . comma_format($child['topics']) . ', ' . $txt['posts'] . ': ' . comma_format($child['posts']) . ')';
+
+				$unreadPostsLink = $child['new'] ? ' <a href="' . $scripturl . '?action=unread;board=' . $child['id'] . '" title="' . $txt['new_posts'] . ' (' . $txt['board_topics'] . ': ' . comma_format($child['topics']) . ', ' . $txt['posts'] . ': ' . comma_format($child['posts']) . ')"><img src="' . $settings['lang_images_url'] . '/new.gif" class="new_posts" alt="" /></a>' : '';
+
+				$child['link'] = '<a href="' . $child['href'] . '" ' . $className . 'title="' . $title . '">' . $child['name'] . '</a>';
+				$child['link'] .= $unreadPostsLink;
+			} else {
+				$title = comma_format($child['posts']) . ' ' . $txt['redirects'];
+				$child['link'] = '<a href="' . $child['href'] . '" title="' . $title . '">' . $child['name'] . '</a>';
+			}
+
+			// Has it posts awaiting approval?
+			if ($child['can_approve_posts'] && ($child['unapproved_posts'] || $child['unapproved_topics'])) {
+				$child['link'] .= ' <a href="' . $scripturl . '?action=moderate;area=postmod;sa=' . ($child['unapproved_topics'] > 0 ? 'topics' : 'posts') . ';brd=' . $child['id'] . ';' . $context['session_var'] . '=' . $context['session_id'] . '" title="' . sprintf($txt['unapproved_posts'], $child['unapproved_topics'], $child['unapproved_posts']) . '" class="moderation_link">(!)</a>';
+			}
+
+			$children[] = $child['new'] ? '<strong>' . $child['link'] . '</strong>' : $child['link'];
+		}
+
+		echo '<tr id="board_', $board['id'], '_children">';
+		echo '<td colspan="3" class="children windowbg">';
+		echo '<strong>', $txt['parent_boards'], '</strong>: ', implode(', ', $children);
+		echo '</td>';
+		echo '</tr>';
+	}
+}
+
+/**
+ * Выводит доски категории. Каждая доска состоит из:
+ * - new,
+ * - id,
+ * - name,
+ * - description,
+ * - moderators,
+ * - link_moderators,
+ * - children,
+ * - link_children,
+ * - children_new,
+ * - topics,
+ * - posts,
+ * - link,
+ * - href,
+ * - last_post.
+ */
+function renderCategoryBoards ($category) {
+	// доски выводятся только у несвернутых категорий
+	if (!$category['is_collapsed']) {
+		echo '<tbody id="category_', $category['id'], '_boards">';
+
+		foreach ($category['boards'] as $board) {
+			echo '<tr class="lff-category-board" id="board_', $board['id'], '">';
+
+			renderBoardIconAndLink($board);
+			renderBoardInfo($board);
+			renderBoardStats($board);
+			renderBoardLastPostInfo($board);
+
+			echo '</tr>';
+
+			renderChildBoardsInfo($board);
+		}
+
+		echo '</tbody>';
+	}
+}
+
+/**
+ * Выводит разделитель между категориями.
+ */
+function renderCategoryDivider () {
+	echo '<tbody class="lff-categoies-divider"><tr><td colspan="4"></td></tr></tbody>';
+}
+
+/**
+ * Выводит категории. Каждая категория состоит из:
+ * - id,
+ * - href,
+ * - link,
+ * - name,
+ * - is_collapsed,
+ * - can_collapse,
+ * - new,
+ * - collapse_href,
+ * - collapse_image (up/down image),
+ * - boards.
+ */
+function renderCategories () {
+	global $context;
+
+	echo '<table class="lff-categories">';
+
+	foreach ($context['categories'] as $category)
+	{
+		// если в категории еще нет досок, она не выводится (кроме случая когда она свернута)
+		if (empty($category['boards']) && !$category['is_collapsed']) {
+			continue;
+		}
+
+		renderCategoryHeader($category);
+		renderCategoryBoards($category);
+		renderCategoryDivider();
+	}
+
+	echo '</table>';
+}
 function template_main()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
@@ -83,158 +371,7 @@ function template_main()
 	// ]]></script>';
 	}
 
-	echo '
-	<div id="boardindex_table">
-		<table class="table_list">';
-
-	/* Each category in categories is made up of:
-	id, href, link, name, is_collapsed (is it collapsed?), can_collapse (is it okay if it is?),
-	new (is it new?), collapse_href (href to collapse/expand), collapse_image (up/down image),
-	and boards. (see below.) */
-	foreach ($context['categories'] as $category)
-	{
-		// If theres no parent boards we can see, avoid showing an empty category (unless its collapsed)
-		if (empty($category['boards']) && !$category['is_collapsed'])
-			continue;
-
-		echo '
-			<tbody class="header" id="category_', $category['id'], '">
-				<tr>
-					<td colspan="4">
-						<div class="cat_bar">
-							<h3 class="catbg">';
-
-		// If this category even can collapse, show a link to collapse it.
-		if ($category['can_collapse'])
-			echo '
-								<a class="collapse" href="', $category['collapse_href'], '">', $category['collapse_image'], '</a>';
-
-		if (!$context['user']['is_guest'] && !empty($category['show_unread']))
-			echo '
-								<a class="unreadlink" href="', $scripturl, '?action=unread;c=', $category['id'], '">', $txt['view_unread_category'], '</a>';
-
-		echo '
-								', $category['link'], '
-							</h3>
-						</div>
-					</td>
-				</tr>
-			</tbody>';
-
-		// Assuming the category hasn't been collapsed...
-		if (!$category['is_collapsed'])
-		{
-
-		echo '
-			<tbody class="content" id="category_', $category['id'], '_boards">';
-			/* Each board in each category's boards has:
-			new (is it new?), id, name, description, moderators (see below), link_moderators (just a list.),
-			children (see below.), link_children (easier to use.), children_new (are they new?),
-			topics (# of), posts (# of), link, href, and last_post. (see below.) */
-			foreach ($category['boards'] as $board)
-			{
-				echo '
-				<tr id="board_', $board['id'], '" class="windowbg2">
-					<td class="icon windowbg"', !empty($board['children']) ? ' rowspan="2"' : '', '>
-						<a href="', ($board['is_redirect'] || $context['user']['is_guest'] ? $board['href'] : $scripturl . '?action=unread;board=' . $board['id'] . '.0;children'), '">';
-
-				// If the board or children is new, show an indicator.
-				if ($board['new'] || $board['children_new'])
-					echo '
-							<img src="', $settings['images_url'], '/', $context['theme_variant_url'], 'on', $board['new'] ? '' : '2', '.png" alt="', $txt['new_posts'], '" title="', $txt['new_posts'], '" />';
-				// Is it a redirection board?
-				elseif ($board['is_redirect'])
-					echo '
-							<img src="', $settings['images_url'], '/', $context['theme_variant_url'], 'redirect.png" alt="*" title="*" />';
-				// No new posts at all! The agony!!
-				else
-					echo '
-							<img src="', $settings['images_url'], '/', $context['theme_variant_url'], 'off.png" alt="', $txt['old_posts'], '" title="', $txt['old_posts'], '" />';
-
-				echo '
-						</a>
-					</td>
-					<td class="info">
-						<a class="subject" href="', $board['href'], '" name="b', $board['id'], '">', $board['name'], '</a>';
-
-				// Has it outstanding posts for approval?
-				if ($board['can_approve_posts'] && ($board['unapproved_posts'] || $board['unapproved_topics']))
-					echo '
-						<a href="', $scripturl, '?action=moderate;area=postmod;sa=', ($board['unapproved_topics'] > 0 ? 'topics' : 'posts'), ';brd=', $board['id'], ';', $context['session_var'], '=', $context['session_id'], '" title="', sprintf($txt['unapproved_posts'], $board['unapproved_topics'], $board['unapproved_posts']), '" class="moderation_link">(!)</a>';
-
-				echo '
-
-						<p>', $board['description'] , '</p>';
-
-				// Show the "Moderators: ". Each has name, href, link, and id. (but we're gonna use link_moderators.)
-				if (!empty($board['moderators']))
-					echo '
-						<p class="moderators">', count($board['moderators']) == 1 ? $txt['moderator'] : $txt['moderators'], ': ', implode(', ', $board['link_moderators']), '</p>';
-
-				// Show some basic information about the number of posts, etc.
-					echo '
-					</td>
-					<td class="stats windowbg">
-						<p>', comma_format($board['posts']), ' ', $board['is_redirect'] ? $txt['redirects'] : $txt['posts'], ' <br />
-						', $board['is_redirect'] ? '' : comma_format($board['topics']) . ' ' . $txt['board_topics'], '
-						</p>
-					</td>
-					<td class="lastpost">';
-
-				/* The board's and children's 'last_post's have:
-				time, timestamp (a number that represents the time.), id (of the post), topic (topic id.),
-				link, href, subject, start (where they should go for the first unread post.),
-				and member. (which has id, name, link, href, username in it.) */
-				if (!empty($board['last_post']['id']))
-					echo '
-						<p><strong>', $txt['last_post'], '</strong>  ', $txt['by'], ' ', $board['last_post']['member']['link'] , '<br />
-						', $txt['in'], ' ', $board['last_post']['link'], '<br />
-						', $txt['on'], ' ', $board['last_post']['time'],'
-						</p>';
-				echo '
-					</td>
-				</tr>';
-				// Show the "Child Boards: ". (there's a link_children but we're going to bold the new ones...)
-				if (!empty($board['children']))
-				{
-					// Sort the links into an array with new boards bold so it can be imploded.
-					$children = array();
-					/* Each child in each board's children has:
-							id, name, description, new (is it new?), topics (#), posts (#), href, link, and last_post. */
-					foreach ($board['children'] as $child)
-					{
-						if (!$child['is_redirect'])
-							$child['link'] = '<a href="' . $child['href'] . '" ' . ($child['new'] ? 'class="new_posts" ' : '') . 'title="' . ($child['new'] ? $txt['new_posts'] : $txt['old_posts']) . ' (' . $txt['board_topics'] . ': ' . comma_format($child['topics']) . ', ' . $txt['posts'] . ': ' . comma_format($child['posts']) . ')">' . $child['name'] . ($child['new'] ? '</a> <a href="' . $scripturl . '?action=unread;board=' . $child['id'] . '" title="' . $txt['new_posts'] . ' (' . $txt['board_topics'] . ': ' . comma_format($child['topics']) . ', ' . $txt['posts'] . ': ' . comma_format($child['posts']) . ')"><img src="' . $settings['lang_images_url'] . '/new.gif" class="new_posts" alt="" />' : '') . '</a>';
-						else
-							$child['link'] = '<a href="' . $child['href'] . '" title="' . comma_format($child['posts']) . ' ' . $txt['redirects'] . '">' . $child['name'] . '</a>';
-
-						// Has it posts awaiting approval?
-						if ($child['can_approve_posts'] && ($child['unapproved_posts'] || $child['unapproved_topics']))
-							$child['link'] .= ' <a href="' . $scripturl . '?action=moderate;area=postmod;sa=' . ($child['unapproved_topics'] > 0 ? 'topics' : 'posts') . ';brd=' . $child['id'] . ';' . $context['session_var'] . '=' . $context['session_id'] . '" title="' . sprintf($txt['unapproved_posts'], $child['unapproved_topics'], $child['unapproved_posts']) . '" class="moderation_link">(!)</a>';
-
-						$children[] = $child['new'] ? '<strong>' . $child['link'] . '</strong>' : $child['link'];
-					}
-					echo '
-					<tr id="board_', $board['id'], '_children">
-						<td colspan="3" class="children windowbg">
-							<strong>', $txt['parent_boards'], '</strong>: ', implode(', ', $children), '
-						</td>
-					</tr>';
-				}
-			}
-		echo '
-			</tbody>';
-		}
-		echo '
-			<tbody class="divider">
-				<tr>
-					<td colspan="4"></td>
-				</tr>
-			</tbody>';
-	}
-	echo '
-		</table>
-	</div>';
+	renderCategories();
 
 	if ($context['user']['is_logged'])
 	{

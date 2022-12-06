@@ -40,8 +40,16 @@ html {
 	--submitBorderColor: #E16E0E;
 
 	/* меню */
+	--menuBorderBottomColor: #313326;
+	--menuItemBorderBottomColor: #45463E;
+	--menuItemBorderBottomWidth: 3px;
+	--menuItemBorderTopColor: #E17F00;
+	--menuItemBorderTopWidth: 3px;
 	--menuItemColor: #FFF;
-	--menuItemHoverBackground: #616455;
+	--menuItemHoverBackground: #EEBD56;
+	--menuItemHoverColor: #884D07;
+	--menuBackground2Level: #817E6D;
+	--menuBackground3Level: #A6A587;
 
 	/* подвал */
 	--footerBackgroundColorStart: #2E3128;
@@ -50,6 +58,16 @@ html {
 
 	/* основное содержимое */
 	--contentNavigationBorderColor: #CCC;
+
+	/* список категорий */
+	--categoryHeaderBackgroundColorStart: #171A1E;
+	--categoryHeaderBackgroundColorStop: #21262C;
+	--categoryHeaderBackgroundImage: linear-gradient(var(--categoryHeaderBackgroundColorStart), var(--categoryHeaderBackgroundColorStop));
+	--categoryHeaderColor: #FFF;
+	--categoryHeaderHoverColor: #FD9;
+
+	/* доска */
+	--boardBackgroundColor: #616455;
 }
 
 /* Общие стили */
@@ -348,10 +366,8 @@ input[type="submit"]:focus {
 }
 
 .lff-menu ul {
-	background: var(--contentBackgroundColor) var(--headerBackgroundImage) repeat-x;
-	background-size: 1px var(--headerBackgroundHeight);
-	border: 1px solid var(--headerBackgroundColorStart);
-	border-top-width: 0;
+	background: var(--menuBackground2Level);
+	border-bottom: 1px solid var(--menuBorderBottomColor);
 	display: none;
 	left: 5px;
 	line-height: 1em;
@@ -361,6 +377,10 @@ input[type="submit"]:focus {
 	top: 100%;
 	width: 19em;
 	z-index: 1;
+}
+
+.lff-menu ul ul {
+	background: var(--menuBackground3Level);
 }
 
 .lff-menu li:hover > ul {
@@ -379,7 +399,7 @@ input[type="submit"]:focus {
 
 .lff-menu ul::after {
 	border: 7px solid transparent;
-	border-bottom-color: var(--headerBackgroundColorStart);
+	border-bottom-color: var(--menuItemBorderTopColor);
 	border-top-width: 0;
 	content: '';
     display: block;
@@ -397,11 +417,18 @@ input[type="submit"]:focus {
 }
 
 .lff-menu ul a {
-	padding: 8px;
+	border-bottom: var(--menuItemBorderBottomWidth) solid var(--menuItemBorderBottomColor);
+	padding: 8px 8px calc(8px - var(--menuItemBorderBottomWidth)) 8px;
+}
+
+.lff-menu ul li:first-child > a {
+	border-top: var(--menuItemBorderTopWidth) solid var(--menuItemBorderTopColor);
+	padding-top: calc(8px - var(--menuItemBorderTopWidth));
 }
 
 .lff-menu li li:hover > a {
 	background: var(--menuItemHoverBackground);
+	color: var(--menuItemHoverColor);
 }
 
 .lff-menu li li:hover ul {
@@ -475,6 +502,122 @@ input[type="submit"]:focus {
 .lff-navigation li {
 	display: inline-block;
 	padding-right: .5em;
+}
+
+/* Список категорий */
+.lff-categories {
+	border-spacing: 1px;
+	empty-cells: show;
+	width: 100%;
+}
+
+.lff-category-header td {
+	padding: 0;
+}
+
+.lff-category-header-content {
+	align-items: center;
+	background: var(--categoryHeaderBackgroundImage) repeat-x;
+    border-radius: 3px 3px 0 0;
+	color: var(--categoryHeaderColor);
+	display: flex;
+	font-size: 1.2em;
+    font-weight: bold;
+	justify-content: space-between;
+	line-height: 31px;
+	padding: 0 9px;
+}
+
+.lff-category-header a:link,
+.lff-category-header a:visited {
+	color: var(--categoryHeaderColor);
+	text-decoration: none;
+}
+
+.lff-category-header a:hover,
+.lff-category-header a:focus,
+.lff-category-header a:active {
+	color: var(--categoryHeaderHoverColor);
+	text-decoration: none;
+}
+
+.lff-category-header h3 {
+	flex-basis: auto;
+	flex-grow: 2;
+	flex-shrink: 0;
+	margin: 0;
+	padding: 0;
+}
+
+.lff-category-collapse {
+	flex-basis: 28px;
+	flex-grow: 0;
+	flex-shrink: 0;
+	text-align: right;
+}
+
+.lff-category-collapse img {
+	border: none;
+}
+
+.lff-category-board {
+	background-color: var(--boardBackgroundColor);
+}
+
+.lff-category-board p {
+	margin: 0 0 0.5em 0;
+}
+
+.lff-category-board td {
+	padding: 0.3em 0.7em;
+}
+
+.lff-board-icon {
+	text-align: center;
+	width: 6%
+}
+
+.lff-categoies-divider td {
+	padding: 5px;
+}
+
+.lff-board-info {
+
+}
+
+.lff-board-info-subject {
+	font-weight: bold;
+    font-size: 110%;
+}
+
+.lff-board-info-subject:link,
+.lff-board-info-subject:visited {
+	color: #d97b33;
+	text-decoration: none;
+}
+
+.lff-board-info-subject:hover,
+.lff-board-info-subject:focus,
+.lff-board-info-subject:active {
+	color: #d97b33;
+	text-decoration: underline;
+}
+
+.lff-board-info-moderators {
+	font-size: 0.8em;
+}
+
+.lff-board-stats {
+	color: #b3b981;
+	font-size: 90%;
+	text-align: center;
+	width: 15%;
+}
+
+.lff-lastboard-lastpost {
+	line-height: 1.3em;
+	font-size: 85%;
+	width: 24%;
 }
 
 /*.dropmenu, .dropmenu ul
@@ -1985,10 +2128,6 @@ select.qaction, input.qaction
 
 /* Styles for a typical table.
 ------------------------------------------------------- */
-table.table_list
-{
-	width: 100%;
-}
 table.table_list p
 {
 	padding: 0;
@@ -2002,44 +2141,24 @@ table.table_list tbody.header td
 {
 	padding: 0;
 }
-table.table_list tbody.content td.stats
-{
-	font-size: 90%;
-	width: 15%;
-	text-align: center;
-}
 table.table_list tbody.content td.lastpost
 {
 	line-height: 1.3em;
 	font-size: 85%;
 	width: 24%;
 }
-table.table_list tbody.content td.icon
-{
-	text-align: center;
-	width: 6%;
-}
+
 
 /* Styles for the board index.
 ------------------------------------------------- */
 
 /* the board title! */
-.table_list tbody.content td.info a.subject
-{
-	font-weight: bold;
-	font-size: 110%;
-	color: #d97b33;
-}
 .table_list tbody.content td.children
 {
 	color: #555;
 	font-size: 85%;
 }
-p.moderators
-{
-	font-size: 0.8em;
-	font-family: verdana, sans-serif;
-}
+
 /* hide the table header/footer parts - but its here for those needing to style it */
 #boardindex_table .table_list thead, #boardindex_table .table_list tfoot
 {
