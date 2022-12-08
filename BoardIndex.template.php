@@ -163,7 +163,7 @@ function renderBoardStats ($board) {
 function renderBoardLastPostInfo ($board) {
 	global $txt;
 
-	echo '<td class="lff-lastboard-lastpost">';
+	echo '<td class="lff-board-lastpost">';
 
 	/* The board's and children's 'last_post's have:
 	time, timestamp (a number that represents the time.), id (of the post), topic (topic id.),
@@ -180,40 +180,97 @@ function renderBoardLastPostInfo ($board) {
 	echo '</td>';
 }
 
+/**
+ * Возвращает ссылку на непрочитанные сообщения дочерней доски.
+ */
+function getChildBoardUnreadPostsLink ($board) {
+	global $scripturl, $settings, $txt;
+
+	if ($board['new']) {
+		$href = $scripturl . '?action=unread;board=' . $board['id'];
+		$topics = $txt['board_topics'] . ': ' . comma_format($board['topics']);
+		$posts = $txt['posts'] . ': ' . comma_format($board['posts']);
+		$title =  $txt['new_posts'] . ' (' . $topics . ', ' . $posts . ')';
+		$icon = '<img src="' . $settings['lang_images_url'] . '/new.gif" alt="" />';
+
+		// пробел в начале нужен для разделения ссылок (перед этой ссылкой есть еще одна)
+		return ' <a href="' . $href . '" title="' . $title . '">' . $icon . '</a>';
+	}
+
+	return '';
+}
+
+/**
+ * Возвращает ссылку на модерацию записей.
+ */
+function getChildBoardModerationLink ($board) {
+	global $context, $scripturl, $txt;
+
+	if ($board['can_approve_posts'] && ($board['unapproved_posts'] || $board['unapproved_topics'])) {
+		$params = [
+			'action=moderate',
+			'area=postmod',
+			'sa=' . ($board['unapproved_topics'] > 0 ? 'topics' : 'posts'),
+			'brd=' . $board['id'],
+			$context['session_var'] . '=' . $context['session_id']
+		];
+		$href = $scripturl . '?' . implode(';', $params);
+		$title = sprintf($txt['unapproved_posts'], $board['unapproved_topics'], $board['unapproved_posts']);
+		$className = 'lff-board-children-moderation-link';
+
+		// пробел в начале нужен для разделения ссылок (перед этой ссылкой есть еще одна)
+		return ' <a href="' . $href . '" title="' . $title . '" class="' . $className . '">(!)</a>';
+	}
+
+	return '';
+}
+
+/**
+ * Выводит информацию о дочерних досках.
+ *
+ * У каждой дочерней доски есть:
+ * - id,
+ * - name,
+ * - description,
+ * - new,
+ * - topics (#),
+ * - posts (#),
+ * - href,
+ * - link,
+ * - last_post
+ */
 function renderChildBoardsInfo ($board) {
 	global $context, $scripturl, $settings, $txt;
-	// Show the "Child Boards: ". (there's a link_children but we're going to bold the new ones...)
-	if (!empty($board['children']))
-	{
-		// Sort the links into an array with new boards bold so it can be imploded.
-		$children = array();
-		/* Each child in each board's children has:
-				id, name, description, new (is it new?), topics (#), posts (#), href, link, and last_post. */
-		foreach ($board['children'] as $child)
-		{
-			if (!$child['is_redirect']) {
-				$className = $child['new'] ? 'class="new_posts" ' : '';
-				$title = ($child['new'] ? $txt['new_posts'] : $txt['old_posts']) . ' (' . $txt['board_topics'] . ': ' . comma_format($child['topics']) . ', ' . $txt['posts'] . ': ' . comma_format($child['posts']) . ')';
 
-				$unreadPostsLink = $child['new'] ? ' <a href="' . $scripturl . '?action=unread;board=' . $child['id'] . '" title="' . $txt['new_posts'] . ' (' . $txt['board_topics'] . ': ' . comma_format($child['topics']) . ', ' . $txt['posts'] . ': ' . comma_format($child['posts']) . ')"><img src="' . $settings['lang_images_url'] . '/new.gif" class="new_posts" alt="" /></a>' : '';
+	if (!empty($board['children'])) {
+		$children = array();
+
+		foreach ($board['children'] as $child) {
+			if (!$child['is_redirect']) {
+				if ($child['new']) {
+					$className = 'class="lff-board-children-new-posts" ';
+					$title = $txt['new_posts'];
+				} else {
+					$className = '';
+					$title = $txt['old_posts'];
+				}
+
+				$title = ' (' . $txt['board_topics'] . ': ' . comma_format($child['topics']) . ', ' . $txt['posts'] . ': ' . comma_format($child['posts']) . ')';
 
 				$child['link'] = '<a href="' . $child['href'] . '" ' . $className . 'title="' . $title . '">' . $child['name'] . '</a>';
-				$child['link'] .= $unreadPostsLink;
+				$child['link'] .= getChildBoardUnreadPostsLink($child);
 			} else {
 				$title = comma_format($child['posts']) . ' ' . $txt['redirects'];
 				$child['link'] = '<a href="' . $child['href'] . '" title="' . $title . '">' . $child['name'] . '</a>';
 			}
 
-			// Has it posts awaiting approval?
-			if ($child['can_approve_posts'] && ($child['unapproved_posts'] || $child['unapproved_topics'])) {
-				$child['link'] .= ' <a href="' . $scripturl . '?action=moderate;area=postmod;sa=' . ($child['unapproved_topics'] > 0 ? 'topics' : 'posts') . ';brd=' . $child['id'] . ';' . $context['session_var'] . '=' . $context['session_id'] . '" title="' . sprintf($txt['unapproved_posts'], $child['unapproved_topics'], $child['unapproved_posts']) . '" class="moderation_link">(!)</a>';
-			}
+			$child['link'] .= getChildBoardModerationLink($child);
 
 			$children[] = $child['new'] ? '<strong>' . $child['link'] . '</strong>' : $child['link'];
 		}
 
 		echo '<tr id="board_', $board['id'], '_children">';
-		echo '<td colspan="3" class="children windowbg">';
+		echo '<td colspan="3" class="lff-board-children">';
 		echo '<strong>', $txt['parent_boards'], '</strong>: ', implode(', ', $children);
 		echo '</td>';
 		echo '</tr>';
@@ -298,6 +355,7 @@ function renderCategories () {
 
 	echo '</table>';
 }
+
 function template_main()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;

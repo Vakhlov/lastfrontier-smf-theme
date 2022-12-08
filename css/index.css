@@ -614,10 +614,28 @@ input[type="submit"]:focus {
 	width: 15%;
 }
 
-.lff-lastboard-lastpost {
+.lff-board-lastpost {
 	line-height: 1.3em;
 	font-size: 85%;
 	width: 24%;
+}
+
+.lff-board-children {
+	color: #555;
+	font-size: 85%;
+}
+
+.lff-board-children-new-posts img {
+	padding: 0 0.1em;
+}
+
+.lff-board-children-moderation-link {
+	font-weight: bold;
+}
+
+.lff-board-children-moderation-link:link,
+.lff-board-children-moderation-link:visited {
+	color: red;
 }
 
 /*.dropmenu, .dropmenu ul
@@ -2151,14 +2169,6 @@ table.table_list tbody.content td.lastpost
 
 /* Styles for the board index.
 ------------------------------------------------- */
-
-/* the board title! */
-.table_list tbody.content td.children
-{
-	color: #555;
-	font-size: 85%;
-}
-
 /* hide the table header/footer parts - but its here for those needing to style it */
 #boardindex_table .table_list thead, #boardindex_table .table_list tfoot
 {
@@ -2288,10 +2298,6 @@ form#ic_login ul li label
 	line-height: 1px;
 }
 
-img.new_posts
-{
-	padding: 0 0.1em;
-}
 /* Styles for the message (topic) index.
 ---------------------------------------------------- */
 div.table_frame .table_list
