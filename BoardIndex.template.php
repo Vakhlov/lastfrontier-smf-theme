@@ -356,17 +356,83 @@ function renderCategories () {
 	echo '</table>';
 }
 
+/**
+ * Выводит иконки из списка досок и описания их значений.
+ */
+function renderCetegoriesIconsLegend () {
+	global $context, $settings, $txt;
+
+	$imagesFolder = $settings['images_url'] . '/';
+	$themePath = '';
+	$newPostsIcon = '';
+
+	if ($context['user']['is_logged']) {
+		$className = ' class="floatleft"';
+		$themePath = $context['theme_variant_url'];
+		$newPostsIcon = '<li class="floatleft"><img src="' . $imagesFolder . $themePath . 'new_some.png" alt="" />' . $txt['new_posts'] . '</li>';
+	} else {
+		$className = ' class="flow_hidden"';
+	}
+
+	echo '<div id="posting_icons"' . $className . '>';
+	echo '<ul class="reset">';
+	echo $newPostsIcon;
+	echo '<li class="floatleft"><img src="', $imagesFolder, $themePath, 'new_none.png" alt="" />', $txt['old_posts'], '</li>';
+	echo '<li class="floatleft"><img src="', $imagesFolder, $themePath, 'new_redirect.png" alt="" />', $txt['redirect_board'], '</li>';
+	echo '</ul>';
+	echo '</div>';
+}
+
+/**
+ * Выводит кнопку "Отметить все сообщения прочитанными".
+ */
+function renderMarkAllAsRead () {
+	global $context, $scripturl, $settings;
+
+	if ($context['user']['is_logged'] && $settings['show_mark_read'] && !empty($context['categories'])) {
+		// свойства кнопки
+		$mark_read_button = array(
+			'markread' => array(
+				'text' => 'mark_as_read',
+				'image' => 'markread.gif',
+				'lang' => true,
+				'url' => $scripturl . '?action=markasread;sa=all;' . $context['session_var'] . '=' . $context['session_id']
+			)
+		);
+
+		// вывод кнопки
+		echo '<div class="mark_read">', template_button_strip($mark_read_button, 'right'), '</div>';
+	}
+}
+
+/**
+ * Выводит общую статистику по форуму.
+ */
+function renderCommonStats () {
+	global $context, $settings, $txt;
+
+	// wtf?
+	if (!$settings['show_stats_index']) {
+		echo '<div id="index_common_stats">';
+		// количество зарегистрированных пользователей
+		echo $txt['members'], ': ', $context['common_stats']['total_members'];
+		echo ' &nbsp;&#8226;&nbsp; ';
+		// количество сообщение
+		echo $txt['posts_made'], ': ', $context['common_stats']['total_posts'];
+		echo ' &nbsp;&#8226;&nbsp; ';
+		// количество тем
+		echo $txt['topics'], ': ', $context['common_stats']['total_topics'];
+		// последний зарегистрированный пользователь
+		echo ($settings['show_latest_member'] ? ' ' . $txt['welcome_member'] . ' <strong>' . $context['common_stats']['latest_member']['link'] . '</strong>' . $txt['newest_member'] : '');
+		echo '</div>';
+	}
+}
+
 function template_main()
 {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 
-	// Show some statistics if stat info is off.
-	if (!$settings['show_stats_index'])
-		echo '
-	<div id="index_common_stats">
-		', $txt['members'], ': ', $context['common_stats']['total_members'], ' &nbsp;&#8226;&nbsp; ', $txt['posts_made'], ': ', $context['common_stats']['total_posts'], ' &nbsp;&#8226;&nbsp; ', $txt['topics'], ': ', $context['common_stats']['total_topics'], '
-		', ($settings['show_latest_member'] ? ' ' . $txt['welcome_member'] . ' <strong>' . $context['common_stats']['latest_member']['link'] . '</strong>' . $txt['newest_member'] : '') , '
-	</div>';
+	renderCommonStats();
 
 	// Show the news fader?  (assuming there are things to show...)
 	if ($settings['show_newsfader'] && !empty($context['fader_news_lines']))
@@ -430,39 +496,8 @@ function template_main()
 	}
 
 	renderCategories();
-
-	if ($context['user']['is_logged'])
-	{
-		echo '
-	<div id="posting_icons" class="floatleft">';
-
-		// Mark read button.
-		$mark_read_button = array(
-			'markread' => array('text' => 'mark_as_read', 'image' => 'markread.gif', 'lang' => true, 'url' => $scripturl . '?action=markasread;sa=all;' . $context['session_var'] . '=' . $context['session_id']),
-		);
-
-		echo '
-		<ul class="reset">
-			<li class="floatleft"><img src="', $settings['images_url'], '/', $context['theme_variant_url'], 'new_some.png" alt="" /> ', $txt['new_posts'], '</li>
-			<li class="floatleft"><img src="', $settings['images_url'], '/', $context['theme_variant_url'], 'new_none.png" alt="" /> ', $txt['old_posts'], '</li>
-			<li class="floatleft"><img src="', $settings['images_url'], '/', $context['theme_variant_url'], 'new_redirect.png" alt="" /> ', $txt['redirect_board'], '</li>
-		</ul>
-	</div>';
-
-		// Show the mark all as read button?
-		if ($settings['show_mark_read'] && !empty($context['categories']))
-			echo '<div class="mark_read">', template_button_strip($mark_read_button, 'right'), '</div>';
-	}
-	else
-	{
-		echo '
-	<div id="posting_icons" class="flow_hidden">
-		<ul class="reset">
-			<li class="floatleft"><img src="', $settings['images_url'], '/new_none.png" alt="" /> ', $txt['old_posts'], '</li>
-			<li class="floatleft"><img src="', $settings['images_url'], '/new_redirect.png" alt="" /> ', $txt['redirect_board'], '</li>
-		</ul>
-	</div>';
-	}
+	renderCetegoriesIconsLegend();
+	renderMarkAllAsRead();
 
 	template_info_center();
 }
