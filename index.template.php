@@ -792,4 +792,37 @@ function template_button_strip($button_strip, $direction = 'top', $strip_options
 		</div>';
 }
 
+/**
+ * Выводит набор кнопок.
+ */
+function renderButtonSet ($buttons, $options = []) {
+	global $context, $txt;
+
+	if ($context['right_to_left']) {
+		$buttons = array_reverse($buttons, true);
+	}
+
+	$items = [];
+
+	foreach ($buttons as $key => $value) {
+		if (!isset($value['test']) || !empty($context[$value['test']])) {
+			$href = 'href="' . $value['url'] . '"';
+			$className = ' class="lff-button-set-item' . (isset($value['active']) ? ' lff-button-set-item_active' : '') . '"';
+			$id = isset($value['id']) ? ' id="lff-button-set-' . $value['id'] . '"' : '';
+			$customAttribute = isset($value['custom']) ? ' ' . $value['custom'] : '';
+			$title = $txt[$value['text']];
+
+			$items[] = '<li><a '. $href . $className . $id . $customAttribute . '>' . $title . '</a></li>';
+		}
+	}
+
+	if (count($items) > 0) {
+		$id = !empty($options['id']) ? ' id="' . $options['id'] . '"' : '';
+
+		echo '<ul class="lff-button-set"' . $id . '>';
+		echo implode('', $items);
+		echo '</ul>';
+	}
+}
+
 ?>

@@ -9,6 +9,12 @@ html {
 	--bodyBackgroundRepeat: repeat-x;
 	--bodyBackgroundSize: 100% 178px;
 	--bodyVerticalPaddings: 15px;
+	--commonButtonBackgroundColor: #E8E8E8;
+	--commonButtonBorderRadius: 5px;
+	--commonButtonColor: #000;
+	--commonButtonHoverBackgroundColor: #FD9604;
+	--commonButtonHoverColor: #FFF;
+	--commonHeaderBorderRadius: 3px;
 	--contentBackgroundColor: #33362D;
 	--fontFamily: Verdana, Arial, Helvetica, sans-serif;
 	--fontSize: 78%;
@@ -68,6 +74,14 @@ html {
 
 	/* доска */
 	--boardBackgroundColor: #616455;
+	--boardStatsColor: #B3B981;
+	--boardSubjectColor: #D97B33;
+	--boardSubjectHoverColor: #D97B33;
+	--childBoardsColor: #555;
+	--childBoardsModerationLinkColor: #F00;
+
+	/* новости в карусели */
+	--newsScrollerColor: #575757;
 }
 
 /* Общие стили */
@@ -504,6 +518,17 @@ input[type="submit"]:focus {
 	padding-right: .5em;
 }
 
+/* Общая статистика: количества пользователей, сообщений, тем; приветствие новичка */
+.lff-forum-common-stats {
+	font-size: 0.9em;
+	margin: 0 0 0.5em 0;
+}
+
+.lff-forum-common-stats p {
+	margin: 0;
+	text-align: right;
+}
+
 /* Список категорий */
 .lff-categories {
 	border-spacing: 1px;
@@ -518,7 +543,7 @@ input[type="submit"]:focus {
 .lff-category-header-content {
 	align-items: center;
 	background: var(--categoryHeaderBackgroundImage) repeat-x;
-    border-radius: 3px 3px 0 0;
+    border-radius: var(--commonHeaderBorderRadius) var(--commonHeaderBorderRadius) 0 0;
 	color: var(--categoryHeaderColor);
 	display: flex;
 	font-size: 1.2em;
@@ -581,8 +606,66 @@ input[type="submit"]:focus {
 	padding: 5px;
 }
 
-.lff-board-info {
+.lff-categories-footer {
+	align-items: center;
+	display: flex;
+	justify-content: space-evenly;
+	margin-bottom: 10px;
+}
 
+.lff-icons-legend {
+	display: flex;
+	flex-basis: auto;
+	flex-grow: 2;
+	flex-shrink: 0;
+	font-size: 0.8em;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.lff-icons-legend li {
+	align-items: center;
+	display: flex;
+	margin-right: 10px;
+}
+
+.lff-icons-legend img {
+	margin-right: 4px;
+}
+
+.lff-button-set {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.lff-button-set li {
+	display: inline;
+	margin-left: 10px;
+}
+
+.lff-button-set-item {
+	background: var(--commonButtonBackgroundColor);
+	border-radius: var(--commonButtonBorderRadius);
+	display: inline-block;
+	font-size: 0.8em;
+	line-height: 19px;
+	padding: 0 8px;
+	text-transform: uppercase;
+}
+
+.lff-button-set-item:link,
+.lff-button-set-item:visited {
+	color: var(--commonButtonColor);
+}
+
+.lff-button-set-item:hover,
+.lff-button-set-item:focus,
+.lff-button-set-item:active {
+	background: var(--commonButtonHoverBackgroundColor);
+	color: var(--commonButtonHoverColor);
+	text-decoration: none;
 }
 
 .lff-board-info-subject {
@@ -592,14 +675,14 @@ input[type="submit"]:focus {
 
 .lff-board-info-subject:link,
 .lff-board-info-subject:visited {
-	color: #d97b33;
+	color: var(--boardSubjectColor);
 	text-decoration: none;
 }
 
 .lff-board-info-subject:hover,
 .lff-board-info-subject:focus,
 .lff-board-info-subject:active {
-	color: #d97b33;
+	color: var(--boardSubjectHoverColor);
 	text-decoration: underline;
 }
 
@@ -608,7 +691,7 @@ input[type="submit"]:focus {
 }
 
 .lff-board-stats {
-	color: #b3b981;
+	color: var(--boardStatsColor);
 	font-size: 90%;
 	text-align: center;
 	width: 15%;
@@ -621,7 +704,7 @@ input[type="submit"]:focus {
 }
 
 .lff-board-children {
-	color: #555;
+	color: var(--childBoardsColor);
 	font-size: 85%;
 }
 
@@ -635,7 +718,42 @@ input[type="submit"]:focus {
 
 .lff-board-children-moderation-link:link,
 .lff-board-children-moderation-link:visited {
-	color: red;
+	color: var(--childBoardsModerationLinkColor);
+}
+
+.lff-news-fader-header {
+	align-items: center;
+    background: var(--categoryHeaderBackgroundImage) repeat-x;
+	border-radius: 3px;
+	color: var(--categoryHeaderColor);
+	display: flex;
+	font-size: 1.2em;
+    font-weight: bold;
+    justify-content: space-between;
+    line-height: 31px;
+	padding: 0 9px;
+}
+
+.lff-news-fader-header h3 {
+	flex-basis: auto;
+    flex-grow: 2;
+    flex-shrink: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.lff-news-fader-header .lff-toggle-section {
+	float: none;
+	margin: 4px;
+}
+
+.lff-news-scroller {
+	color: var(--newsScrollerColor);
+	list-style: none;
+	margin: 1em 0;
+	overflow: auto;
+	padding: 0 2em;
+	text-align: center;
 }
 
 /*.dropmenu, .dropmenu ul
@@ -2175,22 +2293,7 @@ table.table_list tbody.content td.lastpost
 	display: none;
 }
 
-/* the posting icons */
-#posting_icons
-{
-	padding: 0 1em 0.5em 1em;
-	margin: 0 0 1em 0;
-	line-height: 1em;
-}
-#posting_icons ul
-{
-	font-size: 0.8em;
-}
-#posting_icons img
-{
-	vertical-align: middle;
-	margin: 0 0 0 4ex;
-}
+
 #postbuttons_upper ul li a span
 {
 	line-height: 19px;
@@ -2205,24 +2308,6 @@ table.table_list tbody.content td.lastpost
 {
 	clear: right;
 	text-align: right;
-}
-.mark_read
-{
-	padding: 0 0.5em;
-}
-
-/* the newsfader */
-#newsfader
-{
-	margin: 0 2px;
-}
-#smfFadeScroller
-{
-	text-align: center;
-	padding: 0 2em;
-	overflow: auto;
-	margin: 1em 0;
-	color: #575757; /* shouldn't be shorthand style due to a JS bug in IE! */
 }
 
 /* Styles for the info center on the board index.
@@ -2284,18 +2369,6 @@ form#ic_login ul li
 form#ic_login ul li label
 {
 	display: block;
-}
-
-/* the small stats */
-#index_common_stats
-{
-	display: block;
-	margin: 0 0 0.5em 0;
-	text-align: right;
-	font-size: 0.9em;
-	position: relative;
-	top: -20px;
-	line-height: 1px;
 }
 
 /* Styles for the message (topic) index.

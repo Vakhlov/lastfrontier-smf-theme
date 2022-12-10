@@ -367,20 +367,15 @@ function renderCetegoriesIconsLegend () {
 	$newPostsIcon = '';
 
 	if ($context['user']['is_logged']) {
-		$className = ' class="floatleft"';
 		$themePath = $context['theme_variant_url'];
-		$newPostsIcon = '<li class="floatleft"><img src="' . $imagesFolder . $themePath . 'new_some.png" alt="" />' . $txt['new_posts'] . '</li>';
-	} else {
-		$className = ' class="flow_hidden"';
+		$newPostsIcon = '<li><img src="' . $imagesFolder . $themePath . 'new_some.png" alt="" />' . $txt['new_posts'] . '</li>';
 	}
 
-	echo '<div id="posting_icons"' . $className . '>';
-	echo '<ul class="reset">';
+	echo '<ul class="lff-icons-legend">';
 	echo $newPostsIcon;
-	echo '<li class="floatleft"><img src="', $imagesFolder, $themePath, 'new_none.png" alt="" />', $txt['old_posts'], '</li>';
-	echo '<li class="floatleft"><img src="', $imagesFolder, $themePath, 'new_redirect.png" alt="" />', $txt['redirect_board'], '</li>';
+	echo '<li><img src="', $imagesFolder, $themePath, 'new_none.png" alt="" />', $txt['old_posts'], '</li>';
+	echo '<li><img src="', $imagesFolder, $themePath, 'new_redirect.png" alt="" />', $txt['redirect_board'], '</li>';
 	echo '</ul>';
-	echo '</div>';
 }
 
 /**
@@ -390,18 +385,16 @@ function renderMarkAllAsRead () {
 	global $context, $scripturl, $settings;
 
 	if ($context['user']['is_logged'] && $settings['show_mark_read'] && !empty($context['categories'])) {
-		// свойства кнопки
-		$mark_read_button = array(
+		// набор кнопок и их свойств
+		$buttonSet = array(
 			'markread' => array(
 				'text' => 'mark_as_read',
-				'image' => 'markread.gif',
-				'lang' => true,
 				'url' => $scripturl . '?action=markasread;sa=all;' . $context['session_var'] . '=' . $context['session_id']
 			)
 		);
 
 		// вывод кнопки
-		echo '<div class="mark_read">', template_button_strip($mark_read_button, 'right'), '</div>';
+		echo renderButtonSet($buttonSet);
 	}
 }
 
@@ -413,8 +406,9 @@ function renderCommonStats () {
 
 	// wtf?
 	if (!$settings['show_stats_index']) {
-		echo '<div id="index_common_stats">';
+		echo '<div class="lff-forum-common-stats">';
 		// количество зарегистрированных пользователей
+		echo '<p>';
 		echo $txt['members'], ': ', $context['common_stats']['total_members'];
 		echo ' &nbsp;&#8226;&nbsp; ';
 		// количество сообщение
@@ -422,41 +416,54 @@ function renderCommonStats () {
 		echo ' &nbsp;&#8226;&nbsp; ';
 		// количество тем
 		echo $txt['topics'], ': ', $context['common_stats']['total_topics'];
+		echo '</p>';
 		// последний зарегистрированный пользователь
-		echo ($settings['show_latest_member'] ? ' ' . $txt['welcome_member'] . ' <strong>' . $context['common_stats']['latest_member']['link'] . '</strong>' . $txt['newest_member'] : '');
+		echo ($settings['show_latest_member'] ? '<p>' . $txt['welcome_member'] . ' <strong>' . $context['common_stats']['latest_member']['link'] . '</strong>' . $txt['newest_member'] . '</p>' : '');
 		echo '</div>';
 	}
 }
 
-function template_main()
-{
-	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+/**
+ * Выводит блок новостей.
+ */
+function renderNewsBlock () {
+	global $context, $settings, $options, $txt;
 
-	renderCommonStats();
+	if ($settings['show_newsfader'] && !empty($context['fader_news_lines'])) {
+		// идентификатор кнопки, для которой создается JS-представоление;
+		// должен совпадать с тем, что используется в функции renderCollapseUpperSectionButton
+		$collapseButtonId = 'newsBlockToggle';
 
-	// Show the news fader?  (assuming there are things to show...)
-	if ($settings['show_newsfader'] && !empty($context['fader_news_lines']))
-	{
-		echo '
-	<div id="newsfader">
-		<div class="cat_bar">
-			<h3 class="catbg">
-				<img id="newsupshrink" src="', $settings['images_url'], '/collapse.gif" alt="*" title="', $txt['upshrink_description'], '" align="bottom" style="display: none;" />
-				', $txt['news'], '
-			</h3>
-		</div>
-		<ul class="reset" id="smfFadeScroller"', empty($options['collapse_news_fader']) ? '' : ' style="display: none;"', '>';
+		// идентификатор сворачиваемого контейнера;
+		$container = 'smfFadeScroller';
 
-			foreach ($context['news_lines'] as $news)
-				echo '
-			<li>', $news, '</li>';
+		// название настройки, которая будет использоваться для сохранения состояния сворачиваемого блока в БД;
+		$optionName = 'collapse_news_fader';
 
-	echo '
-		</ul>
-	</div>
-	<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/fader.js"></script>
-	<script type="text/javascript"><!-- // --><![CDATA[
+		// получение состояния блока из БД, если оно там есть
+		$collapsed = empty($options[$optionName]) ? 'false' : 'true';
+		// указание на то, что надо использовать Cookie вместо БД для получения состояния сворачиваемого блока;
+		// для неавторизованных пользователей состояние получается из Cookie
+		$useCookie = $context['user']['is_guest'] ? 'true' : 'false';
+		// указание на то, что надо использовать БД вместо Cookie для получения состояния сворачиваемого блока;
+		// для авторизованных пользователей состояние получается из БД
+		$themeOptionsEnabled = $context['user']['is_guest'] ? 'false' : 'true';
 
+		echo '<div class="lff-news-fader" id="newsfader">';
+		echo '<div class="lff-news-fader-header">';
+		echo '<h3>', $txt['news'], '</h3>';
+		echo '<button class="lff-toggle-section" id="', $collapseButtonId, '" title="', $txt['upshrink_description'], '"><svg width="20" height="20"><use href="#shevron"/></svg></button>';
+		echo '</div>';
+		echo '<ul class="lff-news-scroller" id="', $container, '"', empty($options['collapse_news_fader']) ? '' : ' style="display: none;"', '>';
+
+		foreach ($context['news_lines'] as $news) {
+			echo '<li>', $news, '</li>';
+		}
+
+		echo '</ul>';
+		echo '</div>';
+		echo '<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/fader.js"></script>';
+		echo '<script type="text/javascript"><!-- // --><![CDATA[
 		// Create a news fader object.
 		var oNewsFader = new smf_NewsFader({
 			sSelf: \'oNewsFader\',
@@ -465,39 +472,50 @@ function template_main()
 			iFadeDelay: ', empty($settings['newsfader_time']) ? 5000 : $settings['newsfader_time'], '
 		});
 
-		// Create the news fader toggle.
-		var smfNewsFadeToggle = new smc_Toggle({
-			bToggleEnabled: true,
-			bCurrentlyCollapsed: ', empty($options['collapse_news_fader']) ? 'false' : 'true', ',
-			aSwappableContainers: [
-				\'smfFadeScroller\'
-			],
-			aSwapImages: [
-				{
-					sId: \'newsupshrink\',
-					srcExpanded: smf_images_url + \'/collapse.gif\',
-					altExpanded: ', JavaScriptEscape($txt['upshrink_description']), ',
-					srcCollapsed: smf_images_url + \'/expand.gif\',
-					altCollapsed: ', JavaScriptEscape($txt['upshrink_description']), '
-				}
-			],
-			oThemeOptions: {
-				bUseThemeSettings: ', $context['user']['is_guest'] ? 'false' : 'true', ',
-				sOptionName: \'collapse_news_fader\',
-				sSessionVar: ', JavaScriptEscape($context['session_var']), ',
-				sSessionId: ', JavaScriptEscape($context['session_id']), '
+		new SectionToggle({
+			button: {
+				id: \'', $collapseButtonId, '\',
+				titleCollapsed: ', JavaScriptEscape($txt['upshrink_expand']), ',
+				titleExpanded: ', JavaScriptEscape($txt['upshrink_collapse']), '
 			},
-			oCookieOptions: {
-				bUseCookie: ', $context['user']['is_guest'] ? 'true' : 'false', ',
-				sCookieName: \'newsupshrink\'
+			collapsed: ', $collapsed, ',
+			collapsedClassName: \'lff-toggle-section_collapsed\',
+			container: \'', $container, '\',
+			cookie: {
+				enabled: ', $useCookie, ',
+				name: \'newsupshrink\'
+			},
+			themeOptions: {
+				enabled: \'', $themeOptionsEnabled, '\',
+				optionName: \'', $optionName, '\',
+				sessionId: ', JavaScriptEscape($context['session_id']), ',
+				sessionVar: ', JavaScriptEscape($context['session_var']), ',
 			}
 		});
-	// ]]></script>';
+		// ]]></script>';
 	}
+}
 
-	renderCategories();
+/**
+ * Выводит подвал списка категорий.
+ */
+function renderCategoriesFooter () {
+	echo '<div class="lff-categories-footer">';
+
 	renderCetegoriesIconsLegend();
 	renderMarkAllAsRead();
+
+	echo '</div>';
+}
+
+/**
+ * Выводит основное содержимое страницы.
+ */
+function template_main () {
+	renderCommonStats();
+	renderNewsBlock();
+	renderCategories();
+	renderCategoriesFooter();
 
 	template_info_center();
 }
