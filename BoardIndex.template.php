@@ -516,26 +516,11 @@ function template_main () {
 	renderNewsBlock();
 	renderCategories();
 	renderCategoriesFooter();
-
-	template_info_center();
+	renderInfoCenter();
 }
 
-function template_info_center()
-{
+function renderRecentPosts () {
 	global $context, $settings, $options, $txt, $scripturl, $modSettings;
-
-	// Here's where the "Info Center" starts...
-	echo '
-	<span class="clear upperframe"><span></span></span>
-	<div class="roundframe"><div class="innerframe">
-		<div class="cat_bar">
-			<h3 class="catbg">
-				<img class="icon" id="upshrink_ic" src="', $settings['images_url'], '/collapse.gif" alt="*" title="', $txt['upshrink_description'], '" style="display: none;" />
-				', sprintf($txt['info_center_title'], $context['forum_name_html_safe']), '
-			</h3>
-		</div>
-		<div id="upshrinkHeaderIC"', empty($options['collapse_header_ic']) ? '' : ' style="display: none;"', '>';
-
 	// This is the "Recent Posts" bar.
 	if (!empty($settings['number_recent_posts']) && (!empty($context['latest_posts']) || !empty($context['latest_post'])))
 	{
@@ -583,7 +568,10 @@ function template_info_center()
 		echo '
 			</div>';
 	}
+}
 
+function renderEvents () {
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 	// Show information about events, birthdays, and holidays on the calendar.
 	if ($context['show_calendar'])
 	{
@@ -628,75 +616,65 @@ function template_info_center()
 		echo '
 			</p>';
 	}
+}
 
-	// Show statistical style information...
-	if ($settings['show_stats_index'])
-	{
-		echo '
-			<div class="title_barIC">
-				<h4 class="titlebg">
-					<span class="ie6_header floatleft">
-						<a href="', $scripturl, '?action=stats"><img class="icon" src="', $settings['images_url'], '/icons/info.gif" alt="', $txt['forum_stats'], '" /></a>
-						', $txt['forum_stats'], '
-					</span>
-				</h4>
-			</div>
-			<p>
-				', $context['common_stats']['total_posts'], ' ', $txt['posts_made'], ' ', $txt['in'], ' ', $context['common_stats']['total_topics'], ' ', $txt['topics'], ' ', $txt['by'], ' ', $context['common_stats']['total_members'], ' ', $txt['members'], '. ', !empty($settings['show_latest_member']) ? $txt['latest_member'] . ': <strong> ' . $context['common_stats']['latest_member']['link'] . '</strong>' : '', '<br />
-				', (!empty($context['latest_post']) ? $txt['latest_post'] . ': <strong>&quot;' . $context['latest_post']['link'] . '&quot;</strong>  ( ' . $context['latest_post']['time'] . ' )<br />' : ''), '
-				<a href="', $scripturl, '?action=recent">', $txt['recent_view'], '</a>', $context['show_stats'] ? '<br />
-				<a href="' . $scripturl . '?action=stats">' . $txt['more_stats'] . '</a>' : '', '
-			</p>';
+function renderInfoCenterSubHeader ($linkedIcon, $text) {
+	echo '<h4>';
+	echo $linkedIcon;
+	echo $text;
+	echo '</h4>';
+}
+
+/**
+ * Выводит расширенную статистику по форуму.
+ */
+function renderExtendedStats () {
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+
+	if ($settings['show_stats_index']) {
+		// иконка-ссылка в заголовке
+		$href = $scripturl . '?action=stats';
+		$src = $settings['images_url'] . '/icons/info.gif';
+		$text = $txt['forum_stats'];
+		$linkedIcon = '<a href="' . $href . '"><img src="' . $src . '" alt="' . $text . '" /></a>';
+
+		// вывод заголовка
+		renderInfoCenterSubHeader($linkedIcon, $text);
+
+		// вывод содержимого
+		// статистика (X сообщений в Y темах от Z пользователей)
+		$posts = $context['common_stats']['total_posts'] . ' ' . $txt['posts_made'];
+		$topics = $context['common_stats']['total_topics'] . ' ' . $txt['topics'];
+		$users = $context['common_stats']['total_members'] . ' ' . $txt['members'];
+		$totals = $posts . ' ' . $txt['in'] . ' ' . $topics . ' ' . $txt['by'] . ' ' . $users . '.';
+
+		// последний пользователь
+		$lastUser = !empty($settings['show_latest_member']) ? $txt['latest_member'] . ': <strong> ' . $context['common_stats']['latest_member']['link'] . '</strong>' : '';
+
+		// последнее сообщение
+		$latestPost = !empty($context['latest_post']) ? $txt['latest_post'] . ': <strong>&quot;' . $context['latest_post']['link'] . '&quot;</strong>  ( ' . $context['latest_post']['time'] . ' )' : '';
+
+		// ссылка на страницу последних сообщений
+		$recentPostsLink = '<a href="' . $scripturl . '?action=recent">' . $txt['recent_view'] . '</a>';
+
+		// строки, которые надо вывести
+		$lines = [
+			$totals . ' ' . $lastUser,
+			$latestPost,
+			$recentPostsLink
+		];
+
+		// ссылка на страницу подробной статистики
+		if ($context['show_stats']) {
+			$lines[] = '<a href="' . $scripturl . '?action=stats">' . $txt['more_stats'] . '</a>';
+		}
+
+		echo '<p>' . implode('<br />', $lines) . '</p>';
 	}
+}
 
-	// "Users online" - in order of activity.
-	echo '
-			<div class="title_barIC">
-				<h4 class="titlebg">
-					<span class="ie6_header floatleft">
-						', $context['show_who'] ? '<a href="' . $scripturl . '?action=who' . '">' : '', '<img class="icon" src="', $settings['images_url'], '/icons/online.gif', '" alt="', $txt['online_users'], '" />', $context['show_who'] ? '</a>' : '', '
-						', $txt['online_users'], '
-					</span>
-				</h4>
-			</div>
-			<p class="inline stats">
-				', $context['show_who'] ? '<a href="' . $scripturl . '?action=who">' : '', comma_format($context['num_guests']), ' ', $context['num_guests'] == 1 ? $txt['guest'] : $txt['guests'], ', ' . comma_format($context['num_users_online']), ' ', $context['num_users_online'] == 1 ? $txt['user'] : $txt['users'];
-
-	// Handle hidden users and buddies.
-	$bracketList = array();
-	if ($context['show_buddies'])
-		$bracketList[] = comma_format($context['num_buddies']) . ' ' . ($context['num_buddies'] == 1 ? $txt['buddy'] : $txt['buddies']);
-	if (!empty($context['num_spiders']))
-		$bracketList[] = comma_format($context['num_spiders']) . ' ' . ($context['num_spiders'] == 1 ? $txt['spider'] : $txt['spiders']);
-	if (!empty($context['num_users_hidden']))
-		$bracketList[] = comma_format($context['num_users_hidden']) . ' ' . $txt['hidden'];
-
-	if (!empty($bracketList))
-		echo ' (' . implode(', ', $bracketList) . ')';
-
-	echo $context['show_who'] ? '</a>' : '', '
-			</p>
-			<p class="inline smalltext">';
-
-	// Assuming there ARE users online... each user in users_online has an id, username, name, group, href, and link.
-	if (!empty($context['users_online']))
-	{
-		echo '
-				', sprintf($txt['users_active'], $modSettings['lastActive']), ':<br />', implode(', ', $context['list_users_online']);
-
-		// Showing membergroups?
-		if (!empty($settings['show_group_key']) && !empty($context['membergroups']))
-			echo '
-				<br />[' . implode(']&nbsp;&nbsp;[', $context['membergroups']) . ']';
-	}
-
-	echo '
-			</p>
-			<p class="last smalltext">
-				', $txt['most_online_today'], ': <strong>', comma_format($modSettings['mostOnlineToday']), '</strong>.
-				', $txt['most_online_ever'], ': ', comma_format($modSettings['mostOnline']), ' (', timeformat($modSettings['mostDate']), ')
-			</p>';
-
+function renderPersonalMessages () {
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
 	// If they are logged in, but statistical information is off... show a personal message bar.
 	if ($context['user']['is_logged'] && !$settings['show_stats_index'])
 	{
@@ -716,41 +694,138 @@ function template_info_center()
 				</span>
 			</p>';
 	}
+}
+
+/**
+ * Выводит блок "Сейчас на форуме"
+ */
+function renderUsersOnline () {
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+
+	// иконка-ссылка в заголовке
+	$src = $settings['images_url'] . '/icons/online.gif';
+	$text = $txt['online_users'];
+	$linkedIcon = $img = '<img src="' . $src . '" alt="' . $text . '" />';
+
+	if ($context['show_who']) {
+		$href = $scripturl . '?action=who';
+		$linkedIcon = '<a href="' . $href . '">' . $linkedIcon . '</a>';
+	}
+
+	// вывод заголовка
+	renderInfoCenterSubHeader($linkedIcon, $text);
+
+	// "X гостей, Y пользователей"
+	echo '<p class="inline stats">';
+	echo $context['show_who'] ? '<a href="' . $scripturl . '?action=who">' : '';
+	echo comma_format($context['num_guests']), ' ', $context['num_guests'] == 1 ? $txt['guest'] : $txt['guests'], ', ' . comma_format($context['num_users_online']), ' ', $context['num_users_online'] == 1 ? $txt['user'] : $txt['users'];
+
+	// скрытые пользователи и друзья
+	$bracketList = array();
+	if ($context['show_buddies']) {
+		$bracketList[] = comma_format($context['num_buddies']) . ' ' . ($context['num_buddies'] == 1 ? $txt['buddy'] : $txt['buddies']);
+	}
+
+	if (!empty($context['num_spiders'])) {
+		$bracketList[] = comma_format($context['num_spiders']) . ' ' . ($context['num_spiders'] == 1 ? $txt['spider'] : $txt['spiders']);
+	}
+
+	if (!empty($context['num_users_hidden'])) {
+		$bracketList[] = comma_format($context['num_users_hidden']) . ' ' . $txt['hidden'];
+	}
+
+	if (!empty($bracketList)) {
+		echo ' (' . implode(', ', $bracketList) . ')';
+	}
+
+	echo $context['show_who'] ? '</a>' : '';
+	echo '</p>';
+
+	// "пользователи за последние 15 минут"
+	// у каждого пользователя в `users_online` есть `id`, `username`, `name`, `group`, `href` и `link`.
+	if (!empty($context['users_online'])) {
+		echo '<p class="inline smalltext">';
+		echo sprintf($txt['users_active'], $modSettings['lastActive']), ':<br />', implode(', ', $context['list_users_online']);
+
+		// при соответствующей настройке выводятся и группы пользователей
+		if (!empty($settings['show_group_key']) && !empty($context['membergroups'])) {
+			echo '<br />[' . implode(']&nbsp;&nbsp;[', $context['membergroups']) . ']';
+		}
+
+		echo '</p>';
+	}
+
+	// максимум пользователей онлайн за сегодня и за все время
+	echo '<p class="last smalltext">';
+	echo $txt['most_online_today'], ': <strong>', comma_format($modSettings['mostOnlineToday']), '</strong>. ';
+	echo $txt['most_online_ever'], ': ', comma_format($modSettings['mostOnline']), ' (', timeformat($modSettings['mostDate']), ')';
+	echo '</p>';
+}
+
+
+/**
+ *
+ */
+function renderInfoCenter() {
+	global $context, $settings, $options, $txt, $scripturl, $modSettings;
+
+	// идентификатор кнопки, для которой создается JS-представоление;
+	$collapseButtonId = 'infoCenterToggle';
+
+	// идентификатор сворачиваемого контейнера;
+	$container = 'lffInfoCenterContent';
+
+	// название настройки, которая будет использоваться для сохранения состояния сворачиваемого блока в БД;
+	$optionName = 'collapse_header_ic';
+
+	// получение состояния блока из БД, если оно там есть
+	$collapsed = empty($options[$optionName]) ? 'false' : 'true';
+	// указание на то, что надо использовать Cookie вместо БД для получения состояния сворачиваемого блока;
+	// для неавторизованных пользователей состояние получается из Cookie
+	$useCookie = $context['user']['is_guest'] ? 'true' : 'false';
+	// указание на то, что надо использовать БД вместо Cookie для получения состояния сворачиваемого блока;
+	// для авторизованных пользователей состояние получается из БД
+	$themeOptionsEnabled = $context['user']['is_guest'] ? 'false' : 'true';
+
+	echo '<div class="lff-info-center">';
+	echo '<div class="lff-info-center-header">';
+	echo '<h3>', sprintf($txt['info_center_title'], $context['forum_name_html_safe']), '</h3>';
+	echo '<button class="lff-toggle-section" id="', $collapseButtonId, '" title="', $txt['upshrink_description'], '"><svg width="20" height="20"><use href="#shevron"/></svg></button>';
+	echo '</div>';
+	echo '<div class="lff-info-center-content" id="lffInfoCenterContent"', empty($options['collapse_header_ic']) ? '' : ' style="display: none;"', '>';
+
+	// renderRecentPosts();
+	// renderEvents();
+	renderExtendedStats();
+	renderUsersOnline();
+
+	// renderPersonalMessages();
+
+	echo '</div>';
+	echo '</div>';
 
 	echo '
-		</div>
-	</div></div>
-	<span class="lowerframe"><span></span></span>';
-
-	// Info center collapse object.
-	echo '
-	<script type="text/javascript"><!-- // --><![CDATA[
-		var oInfoCenterToggle = new smc_Toggle({
-			bToggleEnabled: true,
-			bCurrentlyCollapsed: ', empty($options['collapse_header_ic']) ? 'false' : 'true', ',
-			aSwappableContainers: [
-				\'upshrinkHeaderIC\'
-			],
-			aSwapImages: [
-				{
-					sId: \'upshrink_ic\',
-					srcExpanded: smf_images_url + \'/collapse.gif\',
-					altExpanded: ', JavaScriptEscape($txt['upshrink_description']), ',
-					srcCollapsed: smf_images_url + \'/expand.gif\',
-					altCollapsed: ', JavaScriptEscape($txt['upshrink_description']), '
-				}
-			],
-			oThemeOptions: {
-				bUseThemeSettings: ', $context['user']['is_guest'] ? 'false' : 'true', ',
-				sOptionName: \'collapse_header_ic\',
-				sSessionVar: ', JavaScriptEscape($context['session_var']), ',
-				sSessionId: ', JavaScriptEscape($context['session_id']), '
+	<script type="text/javascript">
+		new SectionToggle({
+			button: {
+				id: \'', $collapseButtonId, '\',
+				titleCollapsed: ', JavaScriptEscape($txt['upshrink_expand']), ',
+				titleExpanded: ', JavaScriptEscape($txt['upshrink_collapse']), '
 			},
-			oCookieOptions: {
-				bUseCookie: ', $context['user']['is_guest'] ? 'true' : 'false', ',
-				sCookieName: \'upshrinkIC\'
+			collapsed: ', $collapsed, ',
+			collapsedClassName: \'lff-toggle-section_collapsed\',
+			container: \'', $container, '\',
+			cookie: {
+				enabled: ', $useCookie, ',
+				name: \'upshrinkIC\'
+			},
+			themeOptions: {
+				enabled: \'', $themeOptionsEnabled, '\',
+				optionName: \'', $optionName, '\',
+				sessionId: ', JavaScriptEscape($context['session_id']), ',
+				sessionVar: ', JavaScriptEscape($context['session_var']), ',
 			}
 		});
-	// ]]></script>';
+	</script>';
 }
 ?>

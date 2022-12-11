@@ -82,6 +82,15 @@ html {
 
 	/* новости в карусели */
 	--newsScrollerColor: #575757;
+
+	/* информационный центр */
+	--infoCenterBackground: #616455;
+	--infoCenterBorderRadius: 6px;
+	--infoCenterHeaderBackground: linear-gradient(#1D1E1B, #44493B);
+	--infoCenterHeaderBorderRadius: 3px;
+	--infoCenterSeparationBorderColor: #BBB;
+	--infoCenterSubHeaderBackground: linear-gradient(#282B29, #2F3434);
+	--infoCenterSubHeaderBorderRadius: 3px;
 }
 
 /* Общие стили */
@@ -756,6 +765,80 @@ input[type="submit"]:focus {
 	text-align: center;
 }
 
+/* Информационный центр */
+.lff-info-center {
+	background: var(--infoCenterBackground);
+	border-radius: var(--infoCenterBorderRadius);
+	padding: 12px;
+}
+
+.lff-info-center-header {
+	align-items: center;
+	background: var(--infoCenterHeaderBackground) repeat-x;
+	border-radius: var(--infoCenterBorderRadius);
+	display: flex;
+	font-size: 1.2em;
+	height: 31px;
+	justify-content: space-between;
+	line-height: 31px;
+	padding: 0 9px;
+}
+
+.lff-info-center-header h3 {
+	flex-basis: auto;
+    flex-grow: 2;
+    flex-shrink: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.lff-info-center-header .lff-toggle-section {
+	margin: 3px;
+}
+
+.lff-info-center-content {
+	padding-top: 12px;
+}
+
+.lff-info-center-content h4 {
+	align-items: center;
+	background: var(--infoCenterSubHeaderBackground) repeat-x;
+	border-radius: var(--infoCenterSubHeaderBorderRadius);
+	display: flex;
+	height: 31px;
+	justify-content: start;
+	line-height: 31px;
+	padding: 0 9px;
+}
+
+.lff-info-center-content a {
+	margin-right: 8px;
+}
+
+.lff-info-center-content p {
+	margin: 0 0 0.5em 0;
+	padding: 0.5em;
+}
+
+.lff-info-center-content .inline {
+	margin: 0;
+	padding: 0.2em 0.5em;
+}
+
+.lff-info-center-content .stats {
+	font-size: 1.1em;
+	padding-top: 8px;
+}
+
+.lff-info-center-content .smalltext {
+	font-size: 0.85em;
+}
+
+.lff-info-center-content p.last {
+	border-top: 1px dotted var(--infoCenterSeparationBorderColor);
+	margin: 0;
+}
+
 /*.dropmenu, .dropmenu ul
 {
 	line-height: 1em;
@@ -1096,7 +1179,7 @@ em
 }
 
 /* Default font sizes: small (8pt), normal (10pt), and large (14pt). */
-.smalltext, tr.smalltext th
+tr.smalltext th
 {
 	font-size: 0.85em;
 	font-family: verdana, sans-serif;
@@ -2330,28 +2413,6 @@ dl#ic_recentposts dt
 dl#ic_recentposts dd
 {
 	text-align: right;
-}
-#upshrinkHeaderIC p
-{
-	margin: 0 0 0.5em 0;
-	padding: 0.5em;
-}
-#upshrinkHeaderIC p.last
-{
-	margin: 0;
-	padding: 0.5em;
-	border-top: 1px dotted #bbb;
-}
-#upshrinkHeaderIC p.inline
-{
-	border: none;
-	margin: 0;
-	padding: 0.2em 0.5em 0.2em 0.5em;
-}
-#upshrinkHeaderIC p.stats
-{
-	font-size: 1.1em;
-	padding-top: 8px;
 }
 form#ic_login
 {
