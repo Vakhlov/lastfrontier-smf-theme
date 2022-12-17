@@ -794,12 +794,12 @@ function renderInfoCenter() {
 	echo '</div>';
 	echo '<div class="lff-info-center-content" id="lffInfoCenterContent"', empty($options['collapse_header_ic']) ? '' : ' style="display: none;"', '>';
 
-	// renderRecentPosts();
-	// renderEvents();
+	renderRecentPosts();
+	renderEvents();
 	renderExtendedStats();
 	renderUsersOnline();
 
-	// renderPersonalMessages();
+	renderPersonalMessages();
 
 	echo '</div>';
 	echo '</div>';

@@ -9,6 +9,10 @@ html {
 	--bodyBackgroundRepeat: repeat-x;
 	--bodyBackgroundSize: 100% 178px;
 	--bodyVerticalPaddings: 15px;
+	--commonButtonActiveBackgroundColor: #5A6C85;
+	--commonButtonActiveColor: #FFF;
+	--commonButtonActiveHoverBackgroundColor: #5A6C85;
+	--commonButtonActiveHoverColor: #DDF;
 	--commonButtonBackgroundColor: #E8E8E8;
 	--commonButtonBorderRadius: 5px;
 	--commonButtonColor: #000;
@@ -91,6 +95,15 @@ html {
 	--infoCenterSeparationBorderColor: #BBB;
 	--infoCenterSubHeaderBackground: linear-gradient(#282B29, #2F3434);
 	--infoCenterSubHeaderBorderRadius: 3px;
+
+	/* заголовок списка тем */
+	--topicListHeaderBackgroundColor: #4F5968;
+	--topicListHeaderBackgroundImage: linear-gradient(#363E47, #4c5664);
+	--topicListHeaderBackgroundImageSize: 1px 28px;
+	--topicListHeaderBorderRadius: 5px;
+	--topicListHeaderLinkColor: #FFF;
+	--newTopicFlagBackground: #FF8300;
+	--newTopicFlagBorderRadius: 3px;
 }
 
 /* Общие стили */
@@ -677,6 +690,23 @@ input[type="submit"]:focus {
 	text-decoration: none;
 }
 
+.lff-button-set-item_active {
+	font-weight: bold;
+}
+
+.lff-button-set-item_active:link,
+.lff-button-set-item_active:visited {
+	background: var(--commonButtonActiveBackgroundColor);
+	color: var(--commonButtonActiveColor);
+}
+
+.lff-button-set-item_active:hover,
+.lff-button-set-item_active:focus,
+.lff-button-set-item_active:active {
+	background: var(--commonButtonActiveHoverBackgroundColor);
+	color: var(--commonButtonActiveHoverColor);
+}
+
 .lff-board-info-subject {
 	font-weight: bold;
     font-size: 110%;
@@ -839,6 +869,108 @@ input[type="submit"]:focus {
 	margin: 0;
 }
 
+.lff-list-navigation {
+	align-items: center;
+	display: flex;
+	font-size: .9em;
+	justify-content: space-between;
+	padding: 8px .2em 8px .2em;
+}
+
+.lff-topiclist-bottom-section {
+	background: var(--boardBackgroundColor);
+	border: 1px solid var(--infoCenterSeparationBorderColor);
+	display: flex;
+	justify-content: space-between;
+	font-size: 0.9em;
+	line-height: 1.4em;
+	margin-top: 1em;
+	padding: 0.5em 1em;
+}
+
+.lff-topiclist-legend {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	line-height: 22px;
+	list-style: none;
+	margin: 0;
+	max-height: 88px;
+	padding: 0;
+}
+
+.lff-topiclist-legend li {
+	margin-right: 10px;
+}
+
+.lff-topiclist-legend img {
+	vertical-align: middle;
+}
+
+.lff-jump-form div {
+	align-items: center;
+	display: flex;
+}
+
+.lff-jump-form label {
+	margin-right: 4px;
+}
+
+.lff-jump-form select {
+	margin: 0;
+}
+
+.lff-topic-list-header {
+	font-size: .95em;
+	white-space: nowrap;
+}
+
+.lff-topic-list-header th {
+	height: 28px;
+	line-height: 28px;
+	position: relative;
+}
+
+.lff-topic-list-header th::before {
+	background-color: var(--topicListHeaderBackgroundColor);
+	background-image: var(--topicListHeaderBackgroundImage);
+	background-repeat: repeat-x;
+	background-size: var(--topicListHeaderBackgroundImageSize);
+	content: '';
+	display: block;
+	height: 100%;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 100%;
+	z-index: 0;
+}
+
+.lff-topic-list-header th:first-of-type::before{
+	border-radius: var(--topicListHeaderBorderRadius) 0 0 0;
+}
+
+.lff-topic-list-header th:last-of-type::before{
+	border-radius: 0 var(--topicListHeaderBorderRadius) 0 0;
+}
+
+.lff-topic-list-header-content {
+	position: relative;
+}
+
+.lff-topic-list-header a:link,
+.lff-topic-list-header a:visited,
+.lff-topic-list-header a:hover,
+.lff-topic-list-header a:focus,
+.lff-topic-list-header a:active {
+	color: var(--topicListHeaderLinkColor);
+}
+
+.lff-new-topic-flag {
+	background: var(--newTopicFlagBackground);
+	border-radius: var(--newTopicFlagBorderRadius);;
+}
+/**/
 /*.dropmenu, .dropmenu ul
 {
 	line-height: 1em;
