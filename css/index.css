@@ -104,6 +104,10 @@ html {
 	--topicListHeaderLinkColor: #FFF;
 	--newTopicFlagBackground: #FF8300;
 	--newTopicFlagBorderRadius: 3px;
+
+	/* сообщения */
+	--messageBackground: ##616455;
+	--messageBorderRadius: 10px;
 }
 
 /* Общие стили */
@@ -970,6 +974,52 @@ input[type="submit"]:focus {
 	background: var(--newTopicFlagBackground);
 	border-radius: var(--newTopicFlagBorderRadius);;
 }
+
+/* сообщения */
+.lff-message-list-navigation {
+	font-size: .9em;
+}
+
+.lff-messagelist-pages-and-actions {
+	align-items: center;
+	display: flex;
+	justify-content: space-between;
+	padding: 8px .2em 8px .2em;
+}
+
+.lff-next-prev {
+	text-align: right;
+}
+
+.lff-message {
+	background: var(--messageBackground);
+	border-radius: var(--messageBorderRadius);
+	margin-bottom: 1px;
+	padding: 10px 0;
+}
+
+.lff-message .post_wrapper {
+	float: none;
+}
+
+.lff-message .post_wrapper::after {
+	clear: both;
+	content: '';
+	display: block;
+	height: 0;
+}
+
+.lff-messagelist-bottom-section {
+	background: var(--infoCenterBackground);
+	border: 1px solid var(--infoCenterSeparationBorderColor);
+	display: flex;
+	font-size: 0.9em;
+	justify-content: flex-end;
+	line-height: 1.4em;
+	margin: 1em 1px;
+	padding: 0.5em 1em;
+}
+
 /**/
 /*.dropmenu, .dropmenu ul
 {
@@ -2987,14 +3037,6 @@ img.smiley
 	max-width: 100%;
 	min-width: 100%;
 	margin: 0.25em 0 1em 0;
-}
-/* The jump to box */
-#display_jump_to
-{
-	clear: both;
-	padding: 5px;
-	margin-top: 6px;
-	text-align: right;
 }
 
 /* Separator of posts. More useful in the print stylesheet. */

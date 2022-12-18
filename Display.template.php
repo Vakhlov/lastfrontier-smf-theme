@@ -1,5 +1,95 @@
 <?php
 /**
+ * Возвращает кнопки, которые необзодимо вывести сверху и снизу списка сообщений.
+ */
+function getButtons () {
+	global $context, $settings, $scripturl, $txt;
+
+	// Build the normal button array.
+	$buttons = array(
+		'reply' => array('test' => 'can_reply', 'text' => 'reply', 'image' => 'reply.gif', 'lang' => true, 'url' => $scripturl . '?action=post;topic=' . $context['current_topic'] . '.' . $context['start'] . ';last_msg=' . $context['topic_last_message'], 'active' => true),
+		'add_poll' => array('test' => 'can_add_poll', 'text' => 'add_poll', 'image' => 'add_poll.gif', 'lang' => true, 'url' => $scripturl . '?action=editpoll;add;topic=' . $context['current_topic'] . '.' . $context['start']),
+		'notify' => array('test' => 'can_mark_notify', 'text' => $context['is_marked_notify'] ? 'unnotify' : 'notify', 'image' => ($context['is_marked_notify'] ? 'un' : '') . 'notify.gif', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . ($context['is_marked_notify'] ? $txt['notification_disable_topic'] : $txt['notification_enable_topic']) . '\');"', 'url' => $scripturl . '?action=notify;sa=' . ($context['is_marked_notify'] ? 'off' : 'on') . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id']),
+		'mark_unread' => array('test' => 'can_mark_unread', 'text' => 'mark_unread', 'image' => 'markunread.gif', 'lang' => true, 'url' => $scripturl . '?action=markasread;sa=topic;t=' . $context['mark_unread_time'] . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id']),
+		'send' => array('test' => 'can_send_topic', 'text' => 'send_topic', 'image' => 'sendtopic.gif', 'lang' => true, 'url' => $scripturl . '?action=emailuser;sa=sendtopic;topic=' . $context['current_topic'] . '.0'),
+		'print' => array('text' => 'print', 'image' => 'print.gif', 'lang' => true, 'custom' => 'rel="new_win nofollow"', 'url' => $scripturl . '?action=printpage;topic=' . $context['current_topic'] . '.0'),
+	);
+
+	// Allow adding new buttons easily.
+	call_integration_hook('integrate_display_buttons', array(&$buttons));
+
+	return $buttons;
+}
+
+/**
+ * Выводит ссылки постраничной разбивки.
+ */
+function renderListPagination ($side = 'top') {
+	global $context, $modSettings, $txt;
+
+	$href = $side == 'top' ? '#lastPost' : '#top';
+	$linkText = $side == 'top' ? $txt['go_down'] : $txt['go_up'];
+
+	echo '<div>';
+	echo $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . '&nbsp;&nbsp;<a href="' . $href . '"><strong>' . $linkText . '</strong></a>' : '';
+	echo '</div>';
+}
+
+/**
+ * Выводит ссылки на следующую и предыдущую темы.
+ */
+function renderNextPrev () {
+	global $context;
+	echo '<div class="lff-next-prev">', $context['previous_next'], '</div>';
+}
+
+/**
+ * Выводит навигацию и кнопки действий сверху и снизу списка тем.
+ */
+function renderMessageListNavigation ($buttons, $side = 'top', $options = []) {
+	echo '<div class="lff-message-list-navigation">';
+
+	if ($side == 'top') {
+		renderNextPrev();
+	}
+
+	echo '<div class="lff-messagelist-pages-and-actions">';
+
+	renderListPagination($side);
+	renderButtonSet($buttons, $options);
+
+	echo '</div>';
+
+	if ($side == 'bottom') {
+		renderNextPrev();
+	}
+
+	echo '</div>';
+}
+
+function renderModerationButtons () {
+	global $context, $scripturl, $txt;
+
+	$buttons = array(
+		'move' => array('test' => 'can_move', 'text' => 'move_topic', 'image' => 'admin_move.gif', 'lang' => true, 'url' => $scripturl . '?action=movetopic;topic=' . $context['current_topic'] . '.0'),
+		'delete' => array('test' => 'can_delete', 'text' => 'remove_topic', 'image' => 'admin_rem.gif', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['are_sure_remove_topic'] . '\');"', 'url' => $scripturl . '?action=removetopic2;topic=' . $context['current_topic'] . '.0;' . $context['session_var'] . '=' . $context['session_id']),
+		'lock' => array('test' => 'can_lock', 'text' => empty($context['is_locked']) ? 'set_lock' : 'set_unlock', 'image' => 'admin_lock.gif', 'lang' => true, 'url' => $scripturl . '?action=lock;topic=' . $context['current_topic'] . '.' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id']),
+		'sticky' => array('test' => 'can_sticky', 'text' => empty($context['is_sticky']) ? 'set_sticky' : 'set_nonsticky', 'image' => 'admin_sticky.gif', 'lang' => true, 'url' => $scripturl . '?action=sticky;topic=' . $context['current_topic'] . '.' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id']),
+		'merge' => array('test' => 'can_merge', 'text' => 'merge', 'image' => 'merge.gif', 'lang' => true, 'url' => $scripturl . '?action=mergetopics;board=' . $context['current_board'] . '.0;from=' . $context['current_topic']),
+		'calendar' => array('test' => 'calendar_post', 'text' => 'calendar_link', 'image' => 'linktocal.gif', 'lang' => true, 'url' => $scripturl . '?action=post;calendar;msg=' . $context['topic_first_message'] . ';topic=' . $context['current_topic'] . '.0'),
+	);
+
+	// Restore topic. eh?  No monkey business.
+	if ($context['can_restore_topic'])
+		$buttons[] = array('text' => 'restore_topic', 'image' => '', 'lang' => true, 'url' => $scripturl . '?action=restoretopic;topics=' . $context['current_topic'] . ';' . $context['session_var'] . '=' . $context['session_id']);
+
+	// Allow adding new mod buttons easily.
+	call_integration_hook('integrate_mod_buttons', array(&$buttons));
+
+	echo '<div id="moderationbuttons">', renderButtonSet($buttons, array('id' => 'moderationbuttons_strip')), '</div>';
+}
+
+/**
  * Simple Machines Forum (SMF)
  *
  * @package SMF
@@ -157,25 +247,9 @@ function template_main()
 			</div>';
 	}
 
-	// Build the normal button array.
-	$normal_buttons = array(
-		'reply' => array('test' => 'can_reply', 'text' => 'reply', 'image' => 'reply.gif', 'lang' => true, 'url' => $scripturl . '?action=post;topic=' . $context['current_topic'] . '.' . $context['start'] . ';last_msg=' . $context['topic_last_message'], 'active' => true),
-		'add_poll' => array('test' => 'can_add_poll', 'text' => 'add_poll', 'image' => 'add_poll.gif', 'lang' => true, 'url' => $scripturl . '?action=editpoll;add;topic=' . $context['current_topic'] . '.' . $context['start']),
-		'notify' => array('test' => 'can_mark_notify', 'text' => $context['is_marked_notify'] ? 'unnotify' : 'notify', 'image' => ($context['is_marked_notify'] ? 'un' : '') . 'notify.gif', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . ($context['is_marked_notify'] ? $txt['notification_disable_topic'] : $txt['notification_enable_topic']) . '\');"', 'url' => $scripturl . '?action=notify;sa=' . ($context['is_marked_notify'] ? 'off' : 'on') . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id']),
-		'mark_unread' => array('test' => 'can_mark_unread', 'text' => 'mark_unread', 'image' => 'markunread.gif', 'lang' => true, 'url' => $scripturl . '?action=markasread;sa=topic;t=' . $context['mark_unread_time'] . ';topic=' . $context['current_topic'] . '.' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id']),
-		'send' => array('test' => 'can_send_topic', 'text' => 'send_topic', 'image' => 'sendtopic.gif', 'lang' => true, 'url' => $scripturl . '?action=emailuser;sa=sendtopic;topic=' . $context['current_topic'] . '.0'),
-		'print' => array('text' => 'print', 'image' => 'print.gif', 'lang' => true, 'custom' => 'rel="new_win nofollow"', 'url' => $scripturl . '?action=printpage;topic=' . $context['current_topic'] . '.0'),
-	);
+	$buttons = getButtons();
 
-	// Allow adding new buttons easily.
-	call_integration_hook('integrate_display_buttons', array(&$normal_buttons));
-
-	// Show the page index... "Pages: [1]".
-	echo '
-			<div class="pagesection">
-				<div class="nextlinks">', $context['previous_next'], '</div>', template_button_strip($normal_buttons, 'right'), '
-				<div class="pagelinks floatleft">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . ' &nbsp;&nbsp;<a href="#lastPost"><strong>' . $txt['go_down'] . '</strong></a>' : '', '</div>
-			</div>';
+	renderMessageListNavigation($buttons, 'top');
 
 	// Show the topic information - icon, subject, etc.
 	echo '
@@ -233,8 +307,7 @@ function template_main()
 				<a id="msg', $message['id'], '"></a>', $message['first_new'] ? '<a id="new"></a>' : '';
 
 		echo '
-				<div class="', $message['approved'] ? ($message['alternate'] == 0 ? 'windowbg' : 'windowbg2') : 'approvebg', '">
-					<span class="topslice"><span></span></span>
+				<div class="lff-message ', $message['approved'] ? ($message['alternate'] == 0 ? 'windowbg' : 'windowbg2') : 'approvebg', '">
 					<div class="post_wrapper">';
 
 		// Show information about the poster of this message.
@@ -271,7 +344,7 @@ function template_main()
 				echo '
 								<li class="postgroup">', $message['member']['post_group'], '</li>';
 			echo '
-								<li class="stars">', $message['member']['group_stars'], '</li>';
+								<li class="stars">', str_replace('.gif', '.png', $message['member']['group_stars']), '</li>';
 
 			// Show avatars, images, etc.?
 			if (!empty($settings['show_user_images']) && empty($options['show_no_avatars']) && !empty($message['member']['avatar']['image']))
@@ -641,7 +714,6 @@ function template_main()
 		echo '
 						</div>
 					</div>
-					<span class="botslice"><span></span></span>
 				</div>
 				<hr class="post_separator" />';
 	}
@@ -650,40 +722,16 @@ function template_main()
 				</form>
 			</div>
 			<a id="lastPost"></a>';
-
-	// Show the page index... "Pages: [1]".
-	echo '
-			<div class="pagesection">
-				', template_button_strip($normal_buttons, 'right'), '
-				<div class="pagelinks floatleft">', $txt['pages'], ': ', $context['page_index'], !empty($modSettings['topbottomEnable']) ? $context['menu_separator'] . ' &nbsp;&nbsp;<a href="#top"><strong>' . $txt['go_up'] . '</strong></a>' : '', '</div>
-				<div class="nextlinks_bottom">', $context['previous_next'], '</div>
-			</div>';
+	
+	renderMessageListNavigation($buttons, 'bottom');
 
 	// Show the lower breadcrumbs.
 	theme_linktree();
 
-	$mod_buttons = array(
-		'move' => array('test' => 'can_move', 'text' => 'move_topic', 'image' => 'admin_move.gif', 'lang' => true, 'url' => $scripturl . '?action=movetopic;topic=' . $context['current_topic'] . '.0'),
-		'delete' => array('test' => 'can_delete', 'text' => 'remove_topic', 'image' => 'admin_rem.gif', 'lang' => true, 'custom' => 'onclick="return confirm(\'' . $txt['are_sure_remove_topic'] . '\');"', 'url' => $scripturl . '?action=removetopic2;topic=' . $context['current_topic'] . '.0;' . $context['session_var'] . '=' . $context['session_id']),
-		'lock' => array('test' => 'can_lock', 'text' => empty($context['is_locked']) ? 'set_lock' : 'set_unlock', 'image' => 'admin_lock.gif', 'lang' => true, 'url' => $scripturl . '?action=lock;topic=' . $context['current_topic'] . '.' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id']),
-		'sticky' => array('test' => 'can_sticky', 'text' => empty($context['is_sticky']) ? 'set_sticky' : 'set_nonsticky', 'image' => 'admin_sticky.gif', 'lang' => true, 'url' => $scripturl . '?action=sticky;topic=' . $context['current_topic'] . '.' . $context['start'] . ';' . $context['session_var'] . '=' . $context['session_id']),
-		'merge' => array('test' => 'can_merge', 'text' => 'merge', 'image' => 'merge.gif', 'lang' => true, 'url' => $scripturl . '?action=mergetopics;board=' . $context['current_board'] . '.0;from=' . $context['current_topic']),
-		'calendar' => array('test' => 'calendar_post', 'text' => 'calendar_link', 'image' => 'linktocal.gif', 'lang' => true, 'url' => $scripturl . '?action=post;calendar;msg=' . $context['topic_first_message'] . ';topic=' . $context['current_topic'] . '.0'),
-	);
-
-	// Restore topic. eh?  No monkey business.
-	if ($context['can_restore_topic'])
-		$mod_buttons[] = array('text' => 'restore_topic', 'image' => '', 'lang' => true, 'url' => $scripturl . '?action=restoretopic;topics=' . $context['current_topic'] . ';' . $context['session_var'] . '=' . $context['session_id']);
-
-	// Allow adding new mod buttons easily.
-	call_integration_hook('integrate_mod_buttons', array(&$mod_buttons));
-
-	echo '
-			<div id="moderationbuttons">', template_button_strip($mod_buttons, 'bottom', array('id' => 'moderationbuttons_strip')), '</div>';
-
-	// Show the jumpto box, or actually...let Javascript do it.
-	echo '
-			<div class="plainbox" id="display_jump_to">&nbsp;</div>';
+	renderModerationButtons();
+	
+	// info center
+	echo '<div class="lff-messagelist-bottom-section"><div class="lff-jump-form"><div id="display_jump_to"></div></div></div>';
 
 	if ($context['can_reply'] && !empty($options['display_quick_reply']))
 	{
@@ -896,4 +944,7 @@ function template_main()
 				// ]]></script>';
 }
 
+function renderMessage () {
+
+}
 ?>
