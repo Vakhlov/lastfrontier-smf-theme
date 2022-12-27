@@ -1020,6 +1020,41 @@ input[type="submit"]:focus {
 	padding: 0.5em 1em;
 }
 
+.lff-admin-menu .lff-menu,
+.lff-admin-submenu .lff-menu {
+	margin: 0;
+}
+
+.windowbg .content,
+.windowbg2 .content {
+	padding-top: calc(0.5em + 10px);
+	padding-bottom: calc(0.5em + 10px);
+}
+
+/* общие классы, используются в административной части */
+.lff-common-section-title {
+	align-items: center;
+	background: #67707b linear-gradient(#545b62, #67707b) repeat-x;
+	border-radius: 5px;
+	display: flex;
+	height: 31px;
+	justify-content: space-between;
+	line-height: 31px;
+	padding: 0 9px;
+}
+
+.lff-common-section-title h3 {
+	padding: 0;
+}
+
+.lff-common-section-title a:link,
+.lff-common-section-title a:visited,
+.lff-common-section-title a:hover,
+.lff-common-section-title a:focus,
+.lff-common-section-title a:active {
+	color: #FFF;
+}
+
 /**/
 /*.dropmenu, .dropmenu ul
 {
