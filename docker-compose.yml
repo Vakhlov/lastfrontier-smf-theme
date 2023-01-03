@@ -1,0 +1,45 @@
+services:
+  db:
+    container_name: "lff-db"
+    environment:
+      MYSQL_DATABASE: "lff"
+      MYSQL_PASSWORD: "lff"
+      MYSQL_ROOT_PASSWORD: "lff"
+      MYSQL_USER: "lff"
+    image: mariadb:10.3.29
+    networks:
+      - lff
+    volumes:
+      - "./db:/docker-entrypoint-initdb.d"
+  www:
+    build:
+      context: .
+      dockerfile: ./images/php/Dockerfile
+    container_name: "lff-www"
+    depends_on:
+      - db
+    image: "lff-www-image"
+    networks:
+      - lff
+    ports:
+      - 8181:80
+    volumes:
+      - ./www/external:/var/www/html
+      - ./www/src:/var/www/html/forum/Themes/LastFrontier
+      - ./www/vendor:/var/www/html/forum
+  phpmyadmin:
+    container_name: "lff-pma"
+    depends_on:
+      - db
+    environment:
+      - PMA_HOST=db
+      - PMA_PORT=3306
+    image: phpmyadmin:5.1.1
+    networks:
+      - lff
+    ports:
+      - 8282:80
+networks:
+  lff:
+    driver: bridge
+version: "3"
