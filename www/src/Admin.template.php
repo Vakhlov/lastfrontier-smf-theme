@@ -18,13 +18,14 @@ function template_admin()
 	// Welcome message for the admin.
 	echo '
 	<div id="admincenter">
-		<div class="cat_bar">
-			<h3 class="catbg">';
+		<div class="cat_bar lff-admin-center-heading">';
 
-	if ($context['user']['is_admin'])
+	echo '<h3 class="catbg">', $txt['admin_center'], '</h3>';
+
+	if ($context['user']['is_admin']) {
 		echo '
 			<object id="quick_search">
-				<form action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '" class="floatright">
+				<form action="', $scripturl, '?action=admin;area=search" method="post" accept-charset="', $context['character_set'], '" class="lff-admin-center-search">
 					<img src="', $settings['images_url'] , '/filter.gif" alt="" />
 					<input type="text" name="search_term" value="', $txt['admin_search'], '" onclick="if (this.value == \'', $txt['admin_search'], '\') this.value = \'\';" class="input_text" />
 					<select name="search_type">
@@ -35,18 +36,13 @@ function template_admin()
 					<input type="submit" name="search_go" id="search_go" value="', $txt['admin_search_go'], '" class="button_submit" />
 				</form>
 			</object>';
+	}
+	echo '</div>';
 
-	echo $txt['admin_center'], '
-			</h3>
-		</div>
-		<span class="upperframe"><span></span></span>
-		<div class="roundframe">
-			<div id="welcome">
-				<strong>', $txt['hello_guest'], ' ', $context['user']['name'], '!</strong>
-				', sprintf($txt['admin_main_welcome'], $txt['admin_center'], $txt['help'], $txt['help']), '
-			</div>
-		</div>
-		<span class="lowerframe"><span></span></span>';
+	echo '<div class="lff-admin-center-welcome" id="welcome">';
+	echo '<strong>', $txt['hello_guest'], ' ', $context['user']['name'], '!</strong>';
+	echo '', sprintf($txt['admin_main_welcome'], $txt['admin_center'], $txt['help'], $txt['help']), '';
+	echo '</div>';
 
 	// Is there an update available?
 	echo '
