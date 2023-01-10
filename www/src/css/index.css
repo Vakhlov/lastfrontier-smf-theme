@@ -1178,6 +1178,55 @@ input[type="submit"]:focus {
   cursor: pointer;
   padding: 0;
 }
+
+.lff-list-header {
+  font-size: 0.95em;
+  white-space: nowrap;
+}
+
+.lff-list-header th {
+  color: #fff;
+  height: 28px;
+  line-height: 28px;
+  padding: 0 6px;
+  position: relative;
+}
+
+.lff-list-header th a:link,
+.lff-list-header th a:visited,
+.lff-list-header th a:hover,
+.lff-list-header th a:focus,
+.lff-list-header th a:active {
+  color: #fff;
+}
+
+.lff-list-header th::before {
+  background-color: var(--topicListHeaderBackgroundColor);
+  background-image: var(--topicListHeaderBackgroundImage);
+  background-repeat: repeat-x;
+  background-size: var(--topicListHeaderBackgroundImageSize);
+  content: "";
+  display: block;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 0;
+}
+
+.lff-list-header th:first-of-type::before {
+  border-radius: var(--topicListHeaderBorderRadius) 0 0 0;
+}
+
+.lff-list-header th:last-of-type::before {
+  border-radius: 0 var(--topicListHeaderBorderRadius) 0 0;
+}
+
+.lff-list-header-content {
+  position: relative;
+}
+
 /**/
 /*.dropmenu, .dropmenu ul
 {
