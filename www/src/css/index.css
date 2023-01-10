@@ -1134,6 +1134,22 @@ input[type="submit"]:focus {
   position: relative;
 }
 
+.lff-ftp-access-test-buttons {
+  display: flex;
+  justify-content: end;
+}
+
+.lff-l3-title {
+  background-color: var(--topicListHeaderBackgroundColor);
+  background-image: var(--topicListHeaderBackgroundImage);
+  background-repeat: repeat-x;
+  background-size: var(--topicListHeaderBackgroundImageSize);
+  border-radius: var(--topicListHeaderBorderRadius)
+    var(--topicListHeaderBorderRadius) 0 0;
+  height: 31px;
+  line-height: 31px;
+  padding: 0 9px;
+}
 /**/
 /*.dropmenu, .dropmenu ul
 {
@@ -1394,7 +1410,7 @@ fieldset {
 }
 fieldset legend {
   font-weight: bold;
-  color: #444;
+  color: #fff;
 }
 /* No image should have a border when linked. */
 a img {
