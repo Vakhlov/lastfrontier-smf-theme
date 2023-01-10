@@ -1150,6 +1150,34 @@ input[type="submit"]:focus {
   line-height: 31px;
   padding: 0 9px;
 }
+
+.rounded-content {
+  border-radius: 10px;
+}
+
+.lff-l4-heading {
+  align-items: center;
+  background-color: #67707b;
+  background-image: linear-gradient(#545b62, #67707b);
+  background-repeat: repeat-x;
+  background-size: 1px 31px;
+  border-radius: 4px;
+  color: #fff;
+  display: flex;
+  height: 31px;
+  line-height: 31px;
+  justify-content: flex-start;
+  padding: 0 9px;
+}
+
+.lff-l4-heading > a {
+  margin-right: 8px;
+}
+
+.lff-l4-heading h4 {
+  cursor: pointer;
+  padding: 0;
+}
 /**/
 /*.dropmenu, .dropmenu ul
 {
@@ -4169,7 +4197,8 @@ span.hidelink {
   padding: 0 0 8px 0;
 }
 #helpmain {
-  padding: 0 1em;
+  padding-right: 1em;
+  padding-left: 1em;
 }
 #helpmain p {
   margin: 0 0 1.5em 0;
