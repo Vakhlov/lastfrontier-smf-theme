@@ -1227,6 +1227,13 @@ input[type="submit"]:focus {
   position: relative;
 }
 
+.lff-white-bg {
+  background: #fff;
+}
+
+.lff-inline-block {
+  display: inline-block;
+}
 /**/
 /*.dropmenu, .dropmenu ul
 {

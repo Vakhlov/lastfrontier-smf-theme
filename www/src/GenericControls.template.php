@@ -313,6 +313,7 @@ function template_control_verification($verify_id, $display_type = 'all', $reset
 		// Do the actual stuff - image first?
 		elseif ($i == 0 && $verify_context['show_visual'])
 		{
+			echo '<div class="lff-white-bg lff-inline-block">';
 			if ($context['use_graphic_library'])
 				echo '
 				<img src="', $verify_context['image_href'], '" alt="', $txt['visual_verification_description'], '" id="verification_image_', $verify_id, '" />';
@@ -324,6 +325,7 @@ function template_control_verification($verify_id, $display_type = 'all', $reset
 				<img src="', $verify_context['image_href'], ';letter=4" alt="', $txt['visual_verification_description'], '" id="verification_image_', $verify_id, '_4" />
 				<img src="', $verify_context['image_href'], ';letter=5" alt="', $txt['visual_verification_description'], '" id="verification_image_', $verify_id, '_5" />
 				<img src="', $verify_context['image_href'], ';letter=6" alt="', $txt['visual_verification_description'], '" id="verification_image_', $verify_id, '_6" />';
+			echo '</div>';
 
 			if (WIRELESS)
 				echo '<br />
