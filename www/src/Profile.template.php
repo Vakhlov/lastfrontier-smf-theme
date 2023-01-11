@@ -661,8 +661,8 @@ function template_trackActivity()
 
 	// The first table shows IP information about the user.
 	echo '
-			<div class="title_bar">
-				<h3 class="titlebg"><strong>', $txt['view_ips_by'], ' ', $context['member']['name'], '</strong></h3>
+			<div class="lff-l4-heading">
+				<h4>', $txt['view_ips_by'], ' ', $context['member']['name'], '</h4>
 			</div>';
 
 	// The last IP the user used.
@@ -733,8 +733,8 @@ function template_trackIP()
 	if ($context['single_ip'])
 	{
 		echo '
-			<div class="title_bar">
-				<h3 class="titlebg">', $txt['whois_title'], ' ', $context['ip'], '</h3>
+			<div class="lff-l4-heading">
+				<h4>', $txt['whois_title'], ' ', $context['ip'], '</h4>
 			</div>
 			<div class="windowbg2 rounded-content">
 				<div class="padding">';
@@ -749,8 +749,8 @@ function template_trackIP()
 
 	// The second table lists all the members who have been logged as using this IP address.
 	echo '
-		<div class="title_bar">
-			<h3 class="titlebg">', $txt['members_from_ip'], ' ', $context['ip'], '</h3>
+		<div class="lff-l4-heading">
+			<h4>', $txt['members_from_ip'], ' ', $context['ip'], '</h4>
 		</div>';
 	if (empty($context['ips']))
 		echo '
@@ -760,9 +760,9 @@ function template_trackIP()
 		echo '
 		<table class="table_grid" cellspacing="0" width="100%">
 			<thead>
-				<tr class="catbg">
-					<th class="first_th" scope="col">', $txt['ip_address'], '</th>
-					<th class="last_th" scope="col">', $txt['display_name'], '</th>
+				<tr class="lff-list-header">
+					<th class="first_th" scope="col"><div class="lff-list-header-content">', $txt['ip_address'], '</div></th>
+					<th class="last_th" scope="col"><div class="lff-list-header-content">', $txt['display_name'], '</div></th>
 				</tr>
 			</thead>
 			<tbody>';
@@ -802,7 +802,7 @@ function template_showPermissions()
 	if ($context['member']['has_all_permissions'])
 	{
 		echo '
-		<p class="windowbg description">', $txt['showPermissions_all'], '</p>';
+		<p class="windowbg description" style="margin-bottom:0;">', $txt['showPermissions_all'], '</p>';
 	}
 	else
 	{
