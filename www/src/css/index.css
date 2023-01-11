@@ -1167,10 +1167,15 @@ input[type="submit"]:focus {
   height: 31px;
   line-height: 31px;
   justify-content: flex-start;
+  margin-top: 3px;
   padding: 0 9px;
 }
 
 .lff-l4-heading > a {
+  margin-right: 8px;
+}
+
+.lff-l4-heading > img {
   margin-right: 8px;
 }
 
