@@ -256,7 +256,7 @@ function template_main()
 
 		echo '
 	<div class="tborder topic_table" id="messageindex">
-		<table class="table_grid" cellspacing="0">
+		<table class="table_grid lff-topic-list" cellspacing="0">
 			<thead>
 				<tr class="lff-topic-list-header">';
 

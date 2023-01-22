@@ -9,11 +9,11 @@ html {
   --bodyBackgroundRepeat: repeat-x;
   --bodyBackgroundSize: 100% 178px;
   --bodyVerticalPaddings: 15px;
-  --commonButtonActiveBackgroundColor: #5a6c85;
+  --commonButtonActiveBackgroundColor: #807756;
   --commonButtonActiveColor: #fff;
-  --commonButtonActiveHoverBackgroundColor: #5a6c85;
+  --commonButtonActiveHoverBackgroundColor: #807756;
   --commonButtonActiveHoverColor: #ddf;
-  --commonButtonBackgroundColor: #e8e8e8;
+  --commonButtonBackgroundColor: #e5d7ac;
   --commonButtonBorderRadius: 5px;
   --commonButtonColor: #000;
   --commonButtonHoverBackgroundColor: #fd9604;
@@ -58,7 +58,7 @@ html {
   --menuItemBorderBottomWidth: 3px;
   --menuItemBorderTopColor: #e17f00;
   --menuItemBorderTopWidth: 3px;
-  --menuItemColor: #fff;
+  --menuItemColor: #e5d7ac;
   --menuItemHoverBackground: #eebd56;
   --menuItemHoverColor: #884d07;
   --menuBackground2Level: #817e6d;
@@ -83,7 +83,7 @@ html {
     var(--categoryHeaderBackgroundColorStart),
     var(--categoryHeaderBackgroundColorStop)
   );
-  --categoryHeaderColor: #fff;
+  --categoryHeaderColor: #e5d7ac;
   --categoryHeaderHoverColor: #fd9;
 
   /* доска */
@@ -111,13 +111,16 @@ html {
   --topicListHeaderBackgroundImage: linear-gradient(#363e47, #4c5664);
   --topicListHeaderBackgroundImageSize: 1px 28px;
   --topicListHeaderBorderRadius: 5px;
-  --topicListHeaderLinkColor: #fff;
+  --topicListHeaderLinkColor: #e0d98d;
   --newTopicFlagBackground: #ff8300;
   --newTopicFlagBorderRadius: 3px;
 
   /* сообщения */
-  --messageBackground: ##616455;
+  --messageBackground: #616455;
   --messageBorderRadius: 10px;
+
+  /* список категорий */
+  --lastColumnLinkColor: #c5d37c;
 }
 
 /* Общие стили */
@@ -760,6 +763,14 @@ input[type="submit"]:focus {
   width: 24%;
 }
 
+.lff-board-lastpost a:link,
+.lff-board-lastpost a:visited,
+.lff-board-lastpost a:hover,
+.lff-board-lastpost a:focus,
+.lff-board-lastpost a:active {
+  color: var(--lastColumnLinkColor);
+}
+
 .lff-board-children {
   color: var(--childBoardsColor);
   font-size: 85%;
@@ -944,6 +955,7 @@ input[type="submit"]:focus {
 }
 
 .lff-topic-list-header th {
+  color: var(--topicListHeaderLinkColor);
   height: 28px;
   line-height: 28px;
   position: relative;
@@ -987,6 +999,15 @@ input[type="submit"]:focus {
 .lff-new-topic-flag {
   background: var(--newTopicFlagBackground);
   border-radius: var(--newTopicFlagBorderRadius);
+}
+
+.lff-topic-list td,
+.lff-topic-list td a:link,
+.lff-topic-list td a:visited,
+.lff-topic-list td a:hover,
+.lff-topic-list td a:focus,
+.lff-topic-list td a:active {
+  color: var(--topicListHeaderLinkColor);
 }
 
 /* сообщения */
@@ -1774,11 +1795,11 @@ tr.catbg2 td a:visited {
 /* Alternating backgrounds for posts, and several other sections of the forum. */
 .windowbg,
 #preview_body {
-  color: #b3b981;
+  color: #e0d98d;
   background-color: #616455;
 }
 .windowbg2 {
-  color: #000;
+  color: #e3c777;
   background-color: #616455;
 }
 .windowbg3 {
@@ -2032,7 +2053,7 @@ h4.catbg a:visited,
 h3.catbg,
 .table_list tbody.header td,
 .table_list tbody.header td a {
-  color: #fff;
+  color: #e5d7ac;
 }
 h3.catbg2 a,
 h3.catbg2 {
