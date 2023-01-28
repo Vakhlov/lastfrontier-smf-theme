@@ -109,13 +109,23 @@ html {
   --infoCenterSubHeaderBorderRadius: 3px;
 
   /* заголовок списка тем */
-  --topicListHeaderBackgroundColor: #4f5968;
-  --topicListHeaderBackgroundImage: linear-gradient(#363e47, #4c5664);
+  --topicListHeaderBackgroundColorStart: #171a1e;
+  --topicListHeaderBackgroundColorStop: #21262c;
+  --topicListHeaderBackgroundColor: #21262c;
+  --topicListHeaderBackgroundImage: linear-gradient(
+    var(--topicListHeaderBackgroundColorStart),
+    var(--topicListHeaderBackgroundColorStop)
+  );
   --topicListHeaderBackgroundImageSize: 1px 28px;
   --topicListHeaderBorderRadius: 5px;
-  --topicListHeaderLinkColor: #e0d98d;
+  --topicListHeaderLinkColor: #e5d7ac;
+  --topicListHeaderLinkHoverColor: #fd9;
   --newTopicFlagBackground: #ff8300;
   --newTopicFlagBorderRadius: 3px;
+
+  /* темы */
+  --topicLinkColor: #d97b33;
+  --topicLinkHoverColor: #d97b33;
 
   /* сообщения */
   --messageBackground: #616455;
@@ -910,6 +920,22 @@ input[type="submit"]:focus {
   padding: 8px 0.2em 8px 0.2em;
 }
 
+.lff-topic-list .lff-topic a:link,
+.lff-topic-list .lff-topic a:visited,
+.lff-topic-list .lff-topic a:hover,
+.lff-topic-list .lff-topic a:focus,
+.lff-topic-list .lff-topic a:active {
+  color: var(--topicLinkColor);
+}
+
+.lff-topic p {
+  color: #fbcd27;
+}
+
+.topic_table td.lastpost {
+  color: #fbcd27;
+}
+
 .lff-topiclist-bottom-section {
   background: var(--boardBackgroundColor);
   border: 1px solid var(--infoCenterSeparationBorderColor);
@@ -955,6 +981,7 @@ input[type="submit"]:focus {
 
 .lff-topic-list-header {
   font-size: 0.95em;
+  font-weight: bold;
   white-space: nowrap;
 }
 
@@ -993,11 +1020,14 @@ input[type="submit"]:focus {
 }
 
 .lff-topic-list-header a:link,
-.lff-topic-list-header a:visited,
+.lff-topic-list-header a:visited {
+  color: var(--topicListHeaderLinkColor);
+}
+
 .lff-topic-list-header a:hover,
 .lff-topic-list-header a:focus,
 .lff-topic-list-header a:active {
-  color: var(--topicListHeaderLinkColor);
+  color: var(--topicListHeaderLinkHoverColor);
 }
 
 .lff-new-topic-flag {

@@ -82,17 +82,18 @@ function renderBoardIconAndLink ($board) {
 	$src = $settings['images_url'] . '/' . $context['theme_variant_url'];
 	$alt = '*';
 	$title = '*';
-	$width = 38;
+	$width = 41;
 
 	if ($board['new'] || $board['children_new']) {
 		// если доска новая или есть дочерние доски новые, выводится индикатор "новые сообщения"
 		$src .= 'on' . ($board['new'] ? '' : '2') . '.png';
 		$alt = $txt['new_posts'];
 		$title = $txt['new_posts'];
-		$height = $board['new'] ? 41 : 42;
+		$height = 41;
 	} elseif ($board['is_redirect']) {
 		// если доска - перенаправление, выводится соответствующий индикатор
 		$src .= 'redirect.png';
+		$width = 38;
 		$height = 42;
 	} else {
 		// если новых сообщений нет, выводится индикатор "нет новых сообщений"
