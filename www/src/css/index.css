@@ -1264,6 +1264,33 @@ input[type="submit"]:focus {
 .lff-inline-block {
   display: inline-block;
 }
+
+.lff-file-permissons-heading {
+  align-items: center;
+  background-color: #67707b;
+  background-image: linear-gradient(#545b62, #67707b);
+  background-repeat: repeat-x;
+  background-size: 1px 31px;
+  border-radius: 4px;
+  color: #fff;
+  display: flex;
+  height: 31px;
+  line-height: 31px;
+  justify-content: space-between;
+  margin-top: 3px;
+  padding: 0 9px;
+}
+
+.lff-file-permissons-heading h4 {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.lff-file-permissons-heading h4 span {
+  display: block;
+}
 /**/
 /*.dropmenu, .dropmenu ul
 {
@@ -3465,6 +3492,7 @@ tr.titlebg td {
 #admin_content .custom_field {
   margin-bottom: 15px;
 }
+
 #admin_login .centertext {
   padding: 1em;
 }

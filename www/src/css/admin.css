@@ -238,7 +238,7 @@ pre.file_content {
   font-size: 0.8em;
   white-space: nowrap;
 }
-.fperm {
+.lff-file-permissions-title {
   display: block;
   width: 35%;
   text-align: center;

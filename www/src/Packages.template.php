@@ -503,8 +503,8 @@ function template_view_installed()
 
 	echo '
 	<div id="admincenter">
-		<div class="title_bar">
-			<h3 class="titlebg">' . $txt['view_and_remove'] . '</h3>
+		<div class="lff-l4-heading">
+			<h4>' . $txt['view_and_remove'] . '</h4>
 		</div>';
 
 	if (empty($context['installed_mods']))
@@ -1287,7 +1287,6 @@ function template_install_options()
 		</div>
 
 		<div class="windowbg">
-			<span class="topslice"><span></span></span>
 			<div class="content">
 				<form action="', $scripturl, '?action=admin;area=packages;sa=options" method="post" accept-charset="', $context['character_set'], '">
 					<dl class="settings">
@@ -1317,7 +1316,6 @@ function template_install_options()
 					</div>
 				</form>
 			</div>
-			<span class="botslice"><span></span></span>
 		</div>
 	</div>
 	<br class="clear" />';
@@ -1828,21 +1826,21 @@ function template_file_permissions()
 	</div>
 
 	<form action="', $scripturl, '?action=admin;area=packages;sa=perms;', $context['session_var'], '=', $context['session_id'], '" method="post" accept-charset="', $context['character_set'], '">
-		<div class="title_bar">
-			<h3 class="titlebg">
-				<span class="floatleft">', $txt['package_file_perms'], '</span><span class="fperm floatright">', $txt['package_file_perms_new_status'], '</span>
-			</h3>
+		<div class="lff-file-permissons-heading">
+			<h4>
+				<span class="">', $txt['package_file_perms'], '</span><span class="lff-file-permissions-title">', $txt['package_file_perms_new_status'], '</span>
+			</h4>
 		</div>
 		<table width="100%" class="table_grid">
 			<thead>
-				<tr class="catbg">
-					<th class="first_th lefttext" width="30%">&nbsp;', $txt['package_file_perms_name'], '&nbsp;</th>
-					<th width="30%" class="lefttext">', $txt['package_file_perms_status'], '</th>
-					<th align="center" width="8%"><span class="filepermissions">', $txt['package_file_perms_status_read'], '</span></th>
-					<th align="center" width="8%"><span class="filepermissions">', $txt['package_file_perms_status_write'], '</span></th>
-					<th align="center" width="8%"><span class="filepermissions">', $txt['package_file_perms_status_execute'], '</span></th>
-					<th align="center" width="8%"><span class="filepermissions">', $txt['package_file_perms_status_custom'], '</span></th>
-					<th class="last_th" align="center" width="8%"><span class="filepermissions">', $txt['package_file_perms_status_no_change'], '</span></th>
+				<tr class="lff-list-header">
+					<th class="lefttext" width="30%"><div class="lff-list-header-content">&nbsp;', $txt['package_file_perms_name'], '&nbsp;</div></th>
+					<th width="30%" class="lefttext"><div class="lff-list-header-content">', $txt['package_file_perms_status'], '</div></th>
+					<th align="center" width="8%"><div class="lff-list-header-content"><span class="filepermissions">', $txt['package_file_perms_status_read'], '</span></div></th>
+					<th align="center" width="8%"><div class="lff-list-header-content"><span class="filepermissions">', $txt['package_file_perms_status_write'], '</span></div></th>
+					<th align="center" width="8%"><div class="lff-list-header-content"><span class="filepermissions">', $txt['package_file_perms_status_execute'], '</span></div></th>
+					<th align="center" width="8%"><div class="lff-list-header-content"><span class="filepermissions">', $txt['package_file_perms_status_custom'], '</span></div></th>
+					<th class="last_th" align="center" width="8%"><div class="lff-list-header-content"><span class="filepermissions">', $txt['package_file_perms_status_no_change'], '</span></div></th>
 				</tr>
 			</thead>';
 
@@ -1884,7 +1882,6 @@ function template_file_permissions()
 			<h3 class="catbg">', $txt['package_file_perms_change'], '</h3>
 		</div>
 		<div class="windowbg">
-			<span class="topslice"><span></span></span>
 			<div class="content">
 				<fieldset>
 					<dl>
@@ -1926,7 +1923,6 @@ function template_file_permissions()
 					<input type="submit" value="', $txt['package_file_perms_go'], '" name="go" class="button_submit" />
 				</div>
 			</div>
-			<span class="botslice"><span></span></span>
 		</div>';
 
 	// Any looks fors we've already done?
