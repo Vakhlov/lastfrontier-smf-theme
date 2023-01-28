@@ -23,6 +23,8 @@ html {
   --fontFamily: Verdana, Arial, Helvetica, sans-serif;
   --fontSize: 78%;
   --lineHeight: 130%;
+  --linkColor: #c1d184;
+  --linkHoverColor: #c1d184;
 
   /* внешняя рамка всего содержимого */
   --frameBorderColor: #21241b;
@@ -88,7 +90,7 @@ html {
 
   /* доска */
   --boardBackgroundColor: #616455;
-  --boardStatsColor: #b3b981;
+  --boardStatsColor: #d1d4a4;
   --boardSubjectColor: #d97b33;
   --boardSubjectHoverColor: #d97b33;
   --childBoardsColor: #555;
@@ -120,7 +122,7 @@ html {
   --messageBorderRadius: 10px;
 
   /* список категорий */
-  --lastColumnLinkColor: #c5d37c;
+  --lastColumnLinkColor: #e6edc0;
 }
 
 /* Общие стили */
@@ -844,6 +846,7 @@ input[type="submit"]:focus {
 }
 
 .lff-info-center-header h3 {
+  color: var(--categoryHeaderColor);
   flex-basis: auto;
   flex-grow: 2;
   flex-shrink: 0;
@@ -863,6 +866,7 @@ input[type="submit"]:focus {
   align-items: center;
   background: var(--infoCenterSubHeaderBackground) repeat-x;
   border-radius: var(--infoCenterSubHeaderBorderRadius);
+  color: var(--categoryHeaderColor);
   display: flex;
   height: 31px;
   justify-content: start;
@@ -1375,12 +1379,13 @@ input[type="submit"]:focus {
 /* Normal, standard links. */
 a:link,
 a:visited {
-  color: #a1b262;
+  color: var(--linkColor);
   text-decoration: none;
 }
 a:hover {
-  text-decoration: underline;
+  color: var(--linkHoverColor);
   cursor: pointer;
+  text-decoration: underline;
 }
 
 /* Links that open in a new window. */
