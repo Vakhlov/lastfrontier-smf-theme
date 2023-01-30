@@ -388,14 +388,15 @@ input[type="submit"]:focus {
 }
 
 /* Ссылка на магазин поддержки */
-.lff-shop-link {
+.lff-promo-links {
   padding: 0 20px;
 }
 
-.lff-shop-link a {
+.lff-promo-links a {
   border: 1px solid var(--submitBorderColor);
   display: inline-block;
   font-size: 0.9em;
+  margin-right: 9px;
   padding: 7px 9px;
 }
 

@@ -482,10 +482,13 @@ function renderUpperSection () {
 }
 
 /**
- * Выводит ссылку на магазин поддержки.
+ * Выводит промо-ссылкы (на магазин поддержки и на анкету для записи на альфа-тест).
  */
-function renderShopLink () {
-	echo '<div class="lff-shop-link"><a href="https://shop.lastfrontier.ru/" target="_blank">Магазин поддержки</a></div>';
+function renderPromoLinks () {
+	echo '<div class="lff-promo-links">';
+	echo '<a href="https://shop.lastfrontier.ru/" target="_blank">Магазин поддержки</a>';
+	echo '<a href="https://lastfrontier.ru/game/alpha-test/" target="_blank">Записаться на тест</a>';
+	echo '</div>';
 }
 
 /**
@@ -556,7 +559,7 @@ function renderHeader () {
 
 	renderTopSection();	
 	renderUpperSection();
-	renderShopLink();
+	renderPromoLinks();
 	renderBrSeparator();
 	renderToggleJs();
 
