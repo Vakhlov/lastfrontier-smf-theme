@@ -132,6 +132,8 @@ html {
   --messageBorderRadius: 10px;
   --messageTextColor: #ece595;
   --quoteBackgroundColor: #c3d0be;
+  --blockquoteLinkColor: #000;
+  --blockquoteLinkHoverColor: #000;
 
   /* список категорий */
   --lastColumnLinkColor: #e6edc0;
@@ -1359,16 +1361,15 @@ input[type="submit"]:focus {
 
 blockquote.bbc_standard_quote,
 blockquote.bbc_alternate_quote {
-  font-size: x-small;
-  color: #000;
-  line-height: 1.4em;
   background: var(--quoteBackgroundColor) url(../images/theme/quote.png) 0.1em
     0.1em no-repeat;
-  border-top: 2px solid var(--quoteBackgroundColor);
   border-bottom: 2px solid var(--quoteBackgroundColor);
-  padding: 1.1em 1.4em;
+  border-top: 2px solid var(--quoteBackgroundColor);
+  color: #000;
+  line-height: 1.4em;
   margin: 0.1em 0 0.3em 0;
   overflow: auto;
+  padding: 1.1em 1.4em;
 }
 
 /* Alterate blockquote stylings */
@@ -1377,6 +1378,24 @@ blockquote.bbc_standard_quote {
 }
 blockquote.bbc_alternate_quote {
   background-color: var(--quoteBackgroundColor);
+}
+
+blockquote a:link,
+blockquote a:visited {
+  color: var(--blockquoteLinkColor);
+  text-decoration: underline;
+}
+
+blockquote a:hover,
+blockquote a:focus,
+blockquote a:active {
+  color: var(--blockquoteLinkHoverColor);
+  text-decoration: none;
+}
+
+blockquote .bbc_link:link,
+blockquote .bbc_link:visited {
+  border-bottom: none;
 }
 
 /**/
