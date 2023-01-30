@@ -89,7 +89,7 @@ html {
   --categoryHeaderHoverColor: #fd9;
 
   /* доска */
-  --boardBackgroundColor: #616455;
+  --boardBackgroundColor: #505245;
   --boardStatsColor: #d1d4a4;
   --boardSubjectColor: #d97b33;
   --boardSubjectHoverColor: #d97b33;
@@ -100,7 +100,7 @@ html {
   --newsScrollerColor: #575757;
 
   /* информационный центр */
-  --infoCenterBackground: #616455;
+  --infoCenterBackground: #505245;
   --infoCenterBorderRadius: 6px;
   --infoCenterHeaderBackground: linear-gradient(#1d1e1b, #44493b);
   --infoCenterHeaderBorderRadius: 3px;
@@ -124,12 +124,14 @@ html {
   --newTopicFlagBorderRadius: 3px;
 
   /* темы */
-  --topicLinkColor: #d97b33;
-  --topicLinkHoverColor: #d97b33;
+  --topicLinkColor: #dbc083;
+  --topicLinkHoverColor: #dbc083;
 
   /* сообщения */
-  --messageBackground: #616455;
+  --messageBackground: #505245;
   --messageBorderRadius: 10px;
+  --messageTextColor: #ece595;
+  --quoteBackgroundColor: #c3d0be;
 
   /* список категорий */
   --lastColumnLinkColor: #e6edc0;
@@ -373,6 +375,10 @@ input[type="submit"]:focus {
   line-height: 1.2em;
   padding-top: 2px;
   text-align: right;
+}
+
+.lff-random-news h2 {
+  color: var(--categoryHeaderColor);
 }
 
 .lff-random-news p {
@@ -865,7 +871,14 @@ input[type="submit"]:focus {
 }
 
 .lff-info-center-header .lff-toggle-section {
+  color: var(--categoryHeaderColor);
   margin: 3px;
+}
+
+.lff-info-center-header .lff-toggle-section:hover,
+.lff-info-center-header .lff-toggle-section:focus,
+.lff-info-center-header .lff-toggle-section:active {
+  color: var(--categoryHeaderHoverColor);
 }
 
 .lff-info-center-content {
@@ -932,8 +945,24 @@ input[type="submit"]:focus {
   color: #fbcd27;
 }
 
+.lff-topic-list .lff-topic p a:link,
+.lff-topic-list .lff-topic p a:visited,
+.lff-topic-list .lff-topic p a:hover,
+.lff-topic-list .lff-topic p a:focus,
+.lff-topic-list .lff-topic p a:active {
+  color: #ff9f0d;
+}
+
 .topic_table td.lastpost {
   color: #fbcd27;
+}
+
+.topic_table td.lastpost a:link,
+.topic_table td.lastpost a:visited,
+.topic_table td.lastpost a:hover,
+.topic_table td.lastpost a:focus,
+.topic_table td.lastpost a:active {
+  color: #ff9f0d;
 }
 
 .lff-topiclist-bottom-section {
@@ -1065,6 +1094,12 @@ input[type="submit"]:focus {
   border-radius: var(--messageBorderRadius);
   margin-bottom: 1px;
   padding: 10px 0;
+}
+
+.lff-message.windowbg,
+.lff-message.windowbg2,
+.lff-message#preview_body {
+  color: var(--messageTextColor);
 }
 
 .lff-message .post_wrapper {
@@ -1321,6 +1356,29 @@ input[type="submit"]:focus {
 .lff-file-permissons-heading h4 span {
   display: block;
 }
+
+blockquote.bbc_standard_quote,
+blockquote.bbc_alternate_quote {
+  font-size: x-small;
+  color: #000;
+  line-height: 1.4em;
+  background: var(--quoteBackgroundColor) url(../images/theme/quote.png) 0.1em
+    0.1em no-repeat;
+  border-top: 2px solid var(--quoteBackgroundColor);
+  border-bottom: 2px solid var(--quoteBackgroundColor);
+  padding: 1.1em 1.4em;
+  margin: 0.1em 0 0.3em 0;
+  overflow: auto;
+}
+
+/* Alterate blockquote stylings */
+blockquote.bbc_standard_quote {
+  background-color: var(--quoteBackgroundColor);
+}
+blockquote.bbc_alternate_quote {
+  background-color: var(--quoteBackgroundColor);
+}
+
 /**/
 /*.dropmenu, .dropmenu ul
 {
@@ -1684,29 +1742,6 @@ ul.reset li {
 
 /* Some BBC related styles.
 ------------------------------------------------------- */
-
-/* A quote, perhaps from another post. */
-blockquote.bbc_standard_quote,
-blockquote.bbc_alternate_quote {
-  font-size: x-small;
-  color: #000;
-  line-height: 1.4em;
-  background: url(../images/theme/quote.png) 0.1em 0.1em no-repeat;
-  border-top: 2px solid #99a;
-  border-bottom: 2px solid #99a;
-  padding: 1.1em 1.4em;
-  margin: 0.1em 0 0.3em 0;
-  overflow: auto;
-}
-
-/* Alterate blockquote stylings */
-blockquote.bbc_standard_quote {
-  background-color: #d7daec;
-}
-blockquote.bbc_alternate_quote {
-  background-color: #e7eafc;
-}
-
 /* A code block - maybe PHP ;). */
 code.bbc_code {
   display: block;
@@ -1858,11 +1893,11 @@ tr.catbg2 td a:visited {
 .windowbg,
 #preview_body {
   color: #e0d98d;
-  background-color: #616455;
+  background-color: #505245;
 }
 .windowbg2 {
   color: #e3c777;
-  background-color: #616455;
+  background-color: #505245;
 }
 .windowbg3 {
   color: #000;
@@ -1906,10 +1941,10 @@ div.pagesection div.floatright input {
 
 /* Sticky topics get a different background */
 .stickybg {
-  background: #616455;
+  background: #505245;
 }
 .stickybg2 {
-  background: #616455;
+  background: #505245;
 }
 
 /* Locked posts get a different shade, too! */
@@ -2001,7 +2036,7 @@ a.moderation_link:visited {
   font-size: 0.9em;
   line-height: 1.4em;
   border: 1px solid #bbb;
-  background: #616455;
+  background: #505245;
   margin: 0.2em 1px 1em 1px;
 }
 .description_board {
@@ -2364,9 +2399,9 @@ table.table_grid thead tr.catbg th {
 ----------------------------------------------------------- */
 .roundframe {
   padding: 0 10px;
-  background: #616455;
-  border-left: 1px solid #616455;
-  border-right: 1px solid #616455;
+  background: #505245;
+  border-left: 1px solid #505245;
+  border-right: 1px solid #505245;
 }
 .roundframe dl,
 .roundframe dt,
@@ -4127,7 +4162,7 @@ tr.windowbg2 td.stats_day {
   padding: 0 1em 0 0;
 }
 #personal_messages .capacity_bar {
-  background: #616455;
+  background: #505245;
   display: block;
   margin: 0.5em 0 0 1em;
   height: 1em;
