@@ -59,7 +59,7 @@ function template_summary()
 	<div id="basicinfo">
 		<div class="windowbg rounded-content">
 			<div class="content flow_auto">
-				<div class="username"><h4>', $context['member']['name'], ' <span class="position">', (!empty($context['member']['group']) ? $context['member']['group'] : $context['member']['post_group']), '</span></h4></div>
+				<div class="lff-profile-username username"><h4>', $context['member']['name'], ' <span class="position">', (!empty($context['member']['group']) ? $context['member']['group'] : $context['member']['post_group']), '</span></h4></div>
 				', $context['member']['avatar']['image'], '
 				<ul class="reset">';
 
@@ -316,8 +316,8 @@ function template_summary()
 	// Show the users signature.
 	if ($context['signature_enabled'] && !empty($context['member']['signature']))
 		echo '
-				<div class="signature">
-					<h5>', $txt['signature'], ':</h5>
+				<div class="lff-signature signature">
+					<h4>', $txt['signature'], ':</h4>
 					', $context['member']['signature'], '
 				</div>';
 

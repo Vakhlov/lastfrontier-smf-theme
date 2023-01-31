@@ -126,6 +126,7 @@ html {
   /* темы */
   --topicLinkColor: #dbc083;
   --topicLinkHoverColor: #dbc083;
+  --lockedOrMovedTopicBackground: #7a7e69;
 
   /* сообщения */
   --messageBackground: #505245;
@@ -1373,7 +1374,6 @@ blockquote.bbc_alternate_quote {
   padding: 1.1em 1.4em;
 }
 
-/* Alterate blockquote stylings */
 blockquote.bbc_standard_quote {
   background-color: var(--quoteBackgroundColor);
 }
@@ -1397,6 +1397,33 @@ blockquote a:active {
 blockquote .bbc_link:link,
 blockquote .bbc_link:visited {
   border-bottom: none;
+}
+
+.lff-profile-username h4 {
+  color: #83e9cf;
+}
+
+.lff-profile-username .position {
+  color: #a9e289;
+}
+
+.lff-signature h4 {
+  color: #e3c777;
+}
+
+.lockedbg {
+  background-color: var(--lockedOrMovedTopicBackground);
+  font-style: italic;
+}
+
+.lockedbg2 {
+  background-color: var(--lockedOrMovedTopicBackground);
+  font-style: italic;
+}
+
+.topic_table td.lockedbg,
+.topic_table td.lockedbg2 {
+  background-color: var(--lockedOrMovedTopicBackground);
 }
 
 /**/
@@ -1965,16 +1992,6 @@ div.pagesection div.floatright input {
 }
 .stickybg2 {
   background: #505245;
-}
-
-/* Locked posts get a different shade, too! */
-.lockedbg {
-  background: #d4dce2;
-  font-style: italic;
-}
-.lockedbg2 {
-  background: #d8e1e7;
-  font-style: italic;
 }
 
 /* Posts and personal messages displayed throughout the forum. */
