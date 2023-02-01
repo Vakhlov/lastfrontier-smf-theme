@@ -388,12 +388,14 @@ input[type="submit"]:focus {
   margin: 0;
 }
 
-/* Ссылка на магазин поддержки */
+/* Промо ссылки */
 .lff-promo-links {
+  display: flex;
+  justify-content: space-between;
   padding: 0 20px;
 }
 
-.lff-promo-links a {
+.lff-promo-links-self a {
   border: 1px solid var(--submitBorderColor);
   display: inline-block;
   font-size: 0.9em;
@@ -401,6 +403,51 @@ input[type="submit"]:focus {
   padding: 7px 9px;
 }
 
+.lff-promo-links-external {
+  align-items: center;
+  display: flex;
+}
+
+.lff-promo-links-external a {
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: inline-block;
+  height: 32px;
+  opacity: 0.87;
+  text-decoration: none;
+  transition: all 0.1s ease-in-out;
+}
+
+.lff-promo-links-external a:hover,
+.lff-promo-links-external a:focus,
+.lff-promo-links-external a:active {
+  opacity: 1;
+}
+
+.lff-promo-links-external .vk {
+  background-image: url(https://lastfrontier.ru/wp-content/themes/rub/images/vk.png);
+  margin: 0 9px 0 0;
+  padding: 0;
+  width: 32px;
+}
+
+.lff-promo-links-external .dc {
+  background-image: url(https://lastfrontier.ru/wp-content/themes/rub/images/discord.png);
+  margin: 0 9px;
+  width: 43px;
+}
+
+.lff-promo-links-external .tg {
+  background-image: url(https://lastfrontier.ru/wp-content/themes/rub/images/telegram.png);
+  margin: 0 9px;
+  width: 32px;
+}
+
+.lff-promo-links-external .yt {
+  background-image: url(https://lastfrontier.ru/wp-content/themes/rub/images/youtube.png);
+  margin: 0 0 0 9px;
+  width: 45px;
+}
 /* Главное меню
 ------------------------------------------------------- */
 .lff-menu {

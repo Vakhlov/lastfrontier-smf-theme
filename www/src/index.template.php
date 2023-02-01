@@ -486,8 +486,18 @@ function renderUpperSection () {
  */
 function renderPromoLinks () {
 	echo '<div class="lff-promo-links">';
+	echo '<div class="lff-promo-links-self">';
 	echo '<a href="https://shop.lastfrontier.ru/" target="_blank">Магазин поддержки</a>';
 	echo '<a href="https://lastfrontier.ru/game/alpha-test/" target="_blank">Записаться на тест</a>';
+	echo '<a href="https://lastfrontier.ru/forum/index.php/topic,1240.0.html">Проблемы на форуме?</a>';
+	echo '<a href="https://lastfrontier.ru/" target="_blank">Сайт игры</a>';
+	echo '</div>';
+	echo '<div class="lff-promo-links-external">';
+	echo '<a href="https://vk.com/lastfrontier" target="_blank" class="vk" rel="noopener noreferrer"></a>';
+	echo '<a href="https://discord.gg/MDa3PQX" target="_blank" class="dc" rel="noopener noreferrer"></a>';
+	echo '<a href="https://t.me/lastfrontieronline" target="_blank" class="tg" rel="noopener noreferrer"></a>';
+	echo '<a href="https://www.youtube.com/channel/UCBrNpUdyOpB3zRi7qwf85Tw" target="_blank" class="yt" rel="noopener noreferrer"></a>';
+	echo '</div>';
 	echo '</div>';
 }
 
