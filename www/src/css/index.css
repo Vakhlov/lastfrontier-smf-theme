@@ -665,6 +665,10 @@ input[type="submit"]:focus {
   padding: 0 9px;
 }
 
+.lff-category-header-content h3 {
+  color: var(--categoryHeaderColor);
+}
+
 .lff-category-header a:link,
 .lff-category-header a:visited {
   color: var(--categoryHeaderColor);
