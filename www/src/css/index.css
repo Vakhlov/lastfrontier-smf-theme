@@ -370,6 +370,11 @@ input[type="submit"]:focus {
   padding-top: 1px;
 }
 
+.lff-search-and-news form {
+  display: flex;
+  justify-content: end;
+}
+
 .lff-search-and-news input[type="submit"] {
   margin-right: 0;
 }
